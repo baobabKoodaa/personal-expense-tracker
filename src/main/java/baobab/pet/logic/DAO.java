@@ -53,8 +53,8 @@ public class DAO {
         return user;
     }
 
-    public Category createCategory(String categoryName) {
-        Category category = new Category(categoryName);
+    public Category createCategory(String categoryName, Book book) {
+        Category category = new Category(categoryName, book.getGroupId());
         categoryRepository.save(category);
         return category;
     }
@@ -82,10 +82,11 @@ public class DAO {
         return latest;
     }
 
-    public Category detCategoryByName(String categoryName) {
-        Category category = categoryRepository.findOneByName(categoryName);
+    public Category detCategory(String categoryName, Book book) {
+        long groupId = book.getGroupId();
+        Category category = categoryRepository.findOneByNameAndGroupId(categoryName, groupId);
         if (category == null) {
-            category = new Category(categoryName);
+            category = new Category(categoryName, groupId);
             categoryRepository.save(category);
         }
         return category;
@@ -116,7 +117,7 @@ public class DAO {
     }
 
     public Expense createExpense(int year, int month, Book book, String category, long amountCents, User user) {
-        Category lowestSubCategory = detCategoryByName(category);
+        Category lowestSubCategory = detCategory(category, book);
         Expense expense = new Expense(year, month, book, lowestSubCategory, amountCents, user);
         expenseRepository.save(expense);
         return expense;
@@ -136,5 +137,9 @@ public class DAO {
     public void deleteExpense(Expense expense) {
         expense.setCurrent(false);
         expenseRepository.save(expense);
+    }
+
+    public List<Category> findCategoriesByGroupId(long groupId) {
+        return categoryRepository.findByGroupId(groupId);
     }
 }

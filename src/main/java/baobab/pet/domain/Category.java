@@ -9,13 +9,17 @@ public class Category {
     private Long parentCategoryId;
     private String name;
 
+    /** GroupId determines which categories are available to which books. */
+    private long groupId;
+
     public Category() {
         super();
     }
 
-    public Category(String name) {
+    public Category(String name, long groupId) {
         this();
         this.name = name;
+        this.groupId = groupId;
     }
 
     @Id
@@ -43,5 +47,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
     }
 }

@@ -21,9 +21,10 @@ public class ReqController {
     public String defaultMapping(Model model, Principal auth) {
         User user = dao.findUserByLoginname(auth.getName());
         Book book = dao.detLatestBookForUser(user);
+        System.out.println("User " + auth.getName() + " book's groupId is " + book.getGroupId());
 
         model.addAttribute("book", book);
-        model.addAttribute("categories", dao.findAllCategories());
+        model.addAttribute("categories", dao.findCategoriesByGroupId(book.getGroupId()));
         model.addAttribute("expenses", dao.findSomeRecentExpenses(book));
         return "index";
     }

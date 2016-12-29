@@ -1,17 +1,21 @@
 package baobab.pet.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Book {
+public class Book implements Serializable {
 
     private long id;
     private String name;
     private User owner;
     private Set<ReadAccess> readAccessSet;
     private Set<WriteAccess> writeAccessSet;
+
+    /** GroupId determines which categories are available to which books. */
+    private long groupId;
 
     public Book() {
         super();
@@ -33,6 +37,16 @@ public class Book {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @GeneratedValue(generator="my_seq")
+    @SequenceGenerator(name="my_seq",sequenceName="MY_SEQ", allocationSize=1)
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
     }
 
     @Column(nullable = false)
