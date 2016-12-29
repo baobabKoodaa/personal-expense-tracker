@@ -124,13 +124,11 @@ public class DAO {
 
     /** Called when an expense is modified. */
     @Transactional
-    public void updateVersionHistory(Expense current, String previousVersion) {
-        Long prevId = Long.parseLong(previousVersion);
-        Expense previous = expenseRepository.findOne(prevId);
+    public void updateVersionHistory(Expense current, Expense previous) {
         previous.setCurrent(false);
         previous.setNextVersionId(current.getId());
         expenseRepository.save(previous);
-        current.setPreviousVersionId(prevId);
+        current.setPreviousVersionId(previous.getId());
         expenseRepository.save(current);
     }
 
