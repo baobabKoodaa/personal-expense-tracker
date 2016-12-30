@@ -9,13 +9,11 @@ import java.util.Set;
 public class Book implements Serializable {
 
     private long id;
+    private long groupId; /* determines which categories are available to which books. */
     private String name;
     private User owner;
     private Set<ReadAccess> readAccessSet;
     private Set<WriteAccess> writeAccessSet;
-
-    /** GroupId determines which categories are available to which books. */
-    private long groupId;
 
     public Book() {
         super();

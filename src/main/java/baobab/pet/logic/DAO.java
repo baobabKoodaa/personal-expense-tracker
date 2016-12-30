@@ -101,6 +101,10 @@ public class DAO {
         return book;
     }
 
+    /** JPA is unable to auto generate non key columns.
+     *  That's why we need to set group id's manually.
+     *  They are initially set to unique id's (here), but
+     *  the idea is they can be changed to form groups. */
     private void ensureBookHasValidGroupId(Book book) {
         if (book.getGroupId() == 0) {
             book.setGroupId(book.getId());

@@ -4,6 +4,9 @@ import baobab.pet.domain.Book;
 import baobab.pet.domain.User;
 import baobab.pet.logic.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,13 +14,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class LoginService implements UserDetailsService {
 
     @Autowired
     private DAO dao;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private BruteForceDetector bruteForceDetector;
 
     @PostConstruct
     public void init() {
@@ -40,13 +50,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         dao.createExpense(2016, 12, bookM, "entertainment", 10, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", 30, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", 30, mikko);
-
-        System.out.println("BA gid " + bookA.getGroupId());
-        System.out.println("BM gid " + bookM.getGroupId());
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String ip = request.getRemoteAddr();
+        if (bruteForceDetector.isBlocked(ip)) {
+            throw new RuntimeException("IP address temporarily blocked for too many password attempts.");
+        }
+
         User user = dao.findUserByLoginname(username);
         if (user == null) {
             throw new UsernameNotFoundException("No such user: " + username);
@@ -60,5 +72,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 true,
                 Arrays.asList(new SimpleGrantedAuthority(user.getRole())));
     }
+
+
 
 }
