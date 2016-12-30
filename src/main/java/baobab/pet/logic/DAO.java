@@ -95,10 +95,19 @@ public class DAO {
     public Book createBook(String bookName, User user) {
         Book book = new Book(bookName, user);
         bookRepository.save(book);
+        ensureBookHasValidGroupId(book);
         readAccessRepository.save(new ReadAccess(book, user));
         writeAccessRepository.save(new WriteAccess(book, user));
         return book;
     }
+
+    private void ensureBookHasValidGroupId(Book book) {
+        if (book.getGroupId() == 0) {
+            book.setGroupId(book.getId());
+            bookRepository.save(book);
+        }
+    }
+
     private void setBookAsLatestForUser(Book book, User user) {
         user.setLatestRead(book);
         userRepository.save(user);

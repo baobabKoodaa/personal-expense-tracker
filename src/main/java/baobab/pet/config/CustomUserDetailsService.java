@@ -40,6 +40,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         dao.createExpense(2016, 12, bookM, "entertainment", 10, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", 30, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", 30, mikko);
+
+        System.out.println("BA gid " + bookA.getGroupId());
+        System.out.println("BM gid " + bookM.getGroupId());
     }
 
     @Override

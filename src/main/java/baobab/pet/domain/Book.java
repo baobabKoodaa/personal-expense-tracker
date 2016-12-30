@@ -39,8 +39,6 @@ public class Book implements Serializable {
         this.id = id;
     }
 
-    @GeneratedValue(generator="my_seq")
-    @SequenceGenerator(name="my_seq",sequenceName="MY_SEQ", allocationSize=1)
     public long getGroupId() {
         return groupId;
     }
