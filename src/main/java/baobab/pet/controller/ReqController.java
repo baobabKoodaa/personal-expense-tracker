@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import baobab.pet.domain.*;
-import baobab.pet.logic.DAO;
+import baobab.pet.data.DAO;
 
 import javax.transaction.Transactional;
 import java.security.AccessControlException;

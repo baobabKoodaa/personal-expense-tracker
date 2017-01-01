@@ -1,7 +1,7 @@
-package baobab.pet.logic;
+package baobab.pet.data;
 
 import baobab.pet.domain.*;
-import baobab.pet.repository.*;
+import baobab.pet.data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;

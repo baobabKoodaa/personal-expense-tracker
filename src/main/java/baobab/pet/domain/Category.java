@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Category {
 
     private long id;
-    private long groupId; /* GroupId determines which categories are available to which books. */
+    private long groupId; /* determines which categories are available to which books. */
     private Long parentCategoryId;
     private String name;
 

@@ -2,11 +2,8 @@ package baobab.pet.config;
 
 import baobab.pet.domain.Book;
 import baobab.pet.domain.User;
-import baobab.pet.logic.DAO;
+import baobab.pet.data.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -55,7 +52,7 @@ public class LoginService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String ip = request.getRemoteAddr();
-        if (bruteForceDetector.isBlocked(ip)) {
+        if (bruteForceDetector.isBlocked(ip, username)) {
             throw new RuntimeException("IP address temporarily blocked for too many password attempts.");
         }
 

@@ -1,4 +1,4 @@
-package baobab.pet.repository;
+package baobab.pet.data.repository;
 
 import baobab.pet.domain.Book;
 import org.springframework.data.jpa.repository.JpaRepository;

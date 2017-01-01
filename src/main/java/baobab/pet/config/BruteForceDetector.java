@@ -1,52 +1,73 @@
 package baobab.pet.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.springframework.stereotype.Service;
 
+import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Allow 100 failed login attempts per day per IP.
+ *   When the amount has exceeded, allow logins only to accounts
+ *   which have been succesfully accessed by this IP before.
+ *     In this case, allow 100 failed login attempts per day per IP-username-combo.
+ */
 @Component
-public class BruteForceDetector implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
+public class BruteForceDetector {
 
-    private final int MAX_ATTEMPT = 100;
-    private LoadingCache<String, Integer> attemptsCache;
+    private final int MAX_FAILURES = 100;
+    private LoadingCache<String, Integer> failedAttemptsForIp;
+    private LoadingCache<String, Integer> failedAttemptsForIpUserCombo;
+    private TreeSet<String> previouslyAcceptedUserIpCombos;
 
     public BruteForceDetector() {
-        attemptsCache = CacheBuilder.newBuilder()
-                                    .expireAfterWrite(1, TimeUnit.DAYS)
-                                    .build(new CacheLoader<String, Integer>() {
-                                        public Integer load(String key) {
-                                            return 0;
-                                        }
-                                    });
+        failedAttemptsForIp = initCache();
+        failedAttemptsForIpUserCombo = initCache();
+        previouslyAcceptedUserIpCombos = new TreeSet<>();
     }
 
-    public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent e) {
-        WebAuthenticationDetails auth = (WebAuthenticationDetails) e.getAuthentication().getDetails();
-        String ip = auth.getRemoteAddress();
+    public void successfulLogin(String ip, String username) {
+        previouslyAcceptedUserIpCombos.add(ip + username);
+    }
+
+    public void failedLogin(String ip, String username) {
+        rememberFailure(failedAttemptsForIp, ip);
+        rememberFailure(failedAttemptsForIpUserCombo, ip+username);
+    }
+
+    private void rememberFailure(LoadingCache<String, Integer> cache, String key) {
         int attempts = 0;
         try {
-            attempts = attemptsCache.get(ip);
+            attempts = cache.get(key);
         } catch (ExecutionException ex) {
             attempts = 0;
         }
         attempts++;
-        attemptsCache.put(ip, attempts);
+        failedAttemptsForIp.put(key, attempts);
     }
 
-    public boolean isBlocked(String key) {
+    public boolean isBlocked(String ip, String username) {
         try {
-            return attemptsCache.get(key) >= MAX_ATTEMPT;
+            if (previouslyAcceptedUserIpCombos.contains(ip + username)) {
+                return failedAttemptsForIpUserCombo.get(ip + username) >= MAX_FAILURES;
+            } else {
+                return failedAttemptsForIp.get(ip) >= MAX_FAILURES;
+            }
         } catch (ExecutionException e) {
             return false;
         }
+    }
+
+    private LoadingCache<String, Integer> initCache() {
+        return CacheBuilder.newBuilder()
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build(new CacheLoader<String, Integer>() {
+                    public Integer load(String key) {
+                        return 0;
+                    }
+                });
     }
 }
