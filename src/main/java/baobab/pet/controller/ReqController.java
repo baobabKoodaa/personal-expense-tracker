@@ -1,5 +1,6 @@
 package baobab.pet.controller;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,14 +48,22 @@ public class ReqController {
             throw new AccessControlException("User does not have write access to this book!");
         }
         long amountCents = getAmountInCents(amountRaw);
-        Expense current = dao.createExpense(year, month, book, category, amountCents, user);
-        if (!previousVersion.isEmpty()) {
+        validateInputYear(year);
+        validateInputMonth(month);
+        if (previousVersion.isEmpty()) {
+            dao.createExpense(year, month, book, category, amountCents, user);
+        }
+        else {
             /* When modifying an expense. */
             Long prevId = Long.parseLong(previousVersion);
             Expense previous = dao.findExpenseById(prevId);
+            if (!previous.isCurrent()) {
+                throw new InvalidParameterException("Only current expenses can be modified!");
+            }
             if (!dao.hasWriteAccess(user, previous.getBook())) {
                 throw new AccessControlException("User does not have write access to this book!");
             }
+            Expense current = dao.createExpense(year, month, book, category, amountCents, user);
             dao.updateVersionHistory(current, previous);
         }
         return "redirect:/";
@@ -77,7 +86,11 @@ public class ReqController {
         return "login";
     }
 
-    /** amountRaw input examples: 48,32    55    33.00    */
+    /** Transforms an amount from String to long with some error checking.
+     *  Examples:
+     *  48,32 -> 4832
+     *  55    -> 5500
+     *  33.00 -> 3300  */
     private long getAmountInCents(String amountRaw) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -92,15 +105,37 @@ public class ReqController {
             sb.append("00");
             return Long.parseLong(sb.toString());
         }
-        i++; // skip delimiter character
+        char delimiter = amountRaw.charAt(i++);
+        if (delimiter != '.' && delimiter != ',') {
+            /* Unusual delimiter. User input very likely contains some mistake. */
+            throw new InvalidParameterException("Invalid amount.");
+        }
         if (i != amountRaw.length() - 2) {
             /* Unexpected amount of decimals in user input. */
-            throw new InvalidParameterException("Invalid amount. i = " + i + ", amountRaw = " + amountRaw);
+            throw new InvalidParameterException("Invalid amount.");
         }
         for (; i<amountRaw.length(); i++) {
             char c = amountRaw.charAt(i);
             sb.append(c);
         }
-        return Long.parseLong(sb.toString());
+        try {
+            return Long.parseLong(sb.toString());
+        } catch (NumberFormatException e) {
+            throw new InvalidParameterException("Invalid amount.");
+        }
+
+    }
+
+    private void validateInputYear(int year) {
+        int nextYear = 1 + DateTime.now().getYear();
+        if (year < 1 || year > nextYear) {
+            throw new InvalidParameterException("Invalid year.");
+        }
+    }
+
+    private void validateInputMonth(int month) {
+        if (month < 1 || month > 12) {
+            throw new InvalidParameterException("Invalid month.");
+        }
     }
 }

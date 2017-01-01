@@ -33,8 +33,8 @@ public class BruteForceDetector {
     }
 
     public void successfulLogin(String ip, String username) {
-        previouslyAcceptedUserIpCombos.add(ip + username);
-        failedAttemptsForIpUserCombo.invalidate(ip + username);
+        previouslyAcceptedUserIpCombos.add(ip+username);
+        failedAttemptsForIpUserCombo.invalidate(ip+username);
     }
 
     public void failedLogin(String ip, String username) {
@@ -43,20 +43,18 @@ public class BruteForceDetector {
     }
 
     private void rememberFailure(LoadingCache<String, Integer> cache, String key) {
-        int attempts = 0;
         try {
-            attempts = cache.get(key);
+            int earlierAttempts = cache.get(key);
+            cache.put(key, earlierAttempts + 1);
         } catch (ExecutionException ex) {
-            attempts = 0;
+            cache.put(key, 1);
         }
-        attempts++;
-        failedAttemptsForIp.put(key, attempts);
     }
 
     public boolean isBlocked(String ip, String username) {
         try {
-            if (previouslyAcceptedUserIpCombos.contains(ip + username)) {
-                return failedAttemptsForIpUserCombo.get(ip + username) >= MAX_FAILURES;
+            if (previouslyAcceptedUserIpCombos.contains(ip+username)) {
+                return failedAttemptsForIpUserCombo.get(ip+username) >= MAX_FAILURES;
             } else {
                 return failedAttemptsForIp.get(ip) >= MAX_FAILURES;
             }
