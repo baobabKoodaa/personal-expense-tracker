@@ -1,7 +1,7 @@
 package baobab.pet.config;
 
-import baobab.pet.domain.Book;
-import baobab.pet.domain.User;
+import baobab.pet.data.domain.Book;
+import baobab.pet.data.domain.User;
 import baobab.pet.data.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

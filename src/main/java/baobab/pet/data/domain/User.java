@@ -1,4 +1,4 @@
-package baobab.pet.domain;
+package baobab.pet.data.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;

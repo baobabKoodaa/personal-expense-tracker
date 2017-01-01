@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import baobab.pet.domain.*;
+import baobab.pet.data.domain.*;
 import baobab.pet.data.DAO;
 
 import javax.transaction.Transactional;
 import java.security.AccessControlException;
+import java.security.InvalidParameterException;
 import java.security.Principal;
 
 @Controller
@@ -36,7 +37,7 @@ public class ReqController {
             @RequestParam int month,
             @RequestParam long bookId,
             @RequestParam String category,
-            @RequestParam long amountCents,
+            @RequestParam String amountRaw,
             @RequestParam String previousVersion,
             Principal auth
     ) {
@@ -45,6 +46,7 @@ public class ReqController {
         if (!dao.hasWriteAccess(user, book)) {
             throw new AccessControlException("User does not have write access to this book!");
         }
+        long amountCents = getAmountInCents(amountRaw);
         Expense current = dao.createExpense(year, month, book, category, amountCents, user);
         if (!previousVersion.isEmpty()) {
             /* When modifying an expense. */
@@ -73,5 +75,32 @@ public class ReqController {
     @GetMapping("/login")
     public String loginPage() {
         return "login";
+    }
+
+    /** amountRaw input examples: 48,32    55    33.00    */
+    private long getAmountInCents(String amountRaw) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (; i<amountRaw.length(); i++) {
+            /* Read until delimiter character or end of string. */
+            char c = amountRaw.charAt(i);
+            if (c >= '0' && c <= '9') sb.append(c);
+            else break;
+        }
+        if (i == amountRaw.length()) {
+            /* User input represents whole amount with 00 decimals. */
+            sb.append("00");
+            return Long.parseLong(sb.toString());
+        }
+        i++; // skip delimiter character
+        if (i != amountRaw.length() - 2) {
+            /* Unexpected amount of decimals in user input. */
+            throw new InvalidParameterException("Invalid amount. i = " + i + ", amountRaw = " + amountRaw);
+        }
+        for (; i<amountRaw.length(); i++) {
+            char c = amountRaw.charAt(i);
+            sb.append(c);
+        }
+        return Long.parseLong(sb.toString());
     }
 }

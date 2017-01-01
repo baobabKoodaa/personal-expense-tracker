@@ -1,8 +1,8 @@
 package baobab.pet.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import baobab.pet.domain.Book;
-import baobab.pet.domain.Expense;
+import baobab.pet.data.domain.Book;
+import baobab.pet.data.domain.Expense;
 
 import java.util.List;
 

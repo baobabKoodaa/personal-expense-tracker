@@ -1,6 +1,6 @@
 package baobab.pet.data;
 
-import baobab.pet.domain.*;
+import baobab.pet.data.domain.*;
 import baobab.pet.data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -104,7 +104,7 @@ public class DAO {
     /** JPA is unable to auto generate non key columns.
      *  That's why we need to set group id's manually.
      *  They are initially set to unique id's (here), but
-     *  the idea is they can be changed to form groups. */
+     *  they can be changed later in order to form groups. */
     private void ensureBookHasValidGroupId(Book book) {
         if (book.getGroupId() == 0) {
             book.setGroupId(book.getId());

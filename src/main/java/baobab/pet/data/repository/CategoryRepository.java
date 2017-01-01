@@ -1,6 +1,6 @@
 package baobab.pet.data.repository;
 
-import baobab.pet.domain.Category;
+import baobab.pet.data.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
