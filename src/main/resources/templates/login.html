@@ -3,13 +3,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Spring Security Example </title>
-    <div th:include="fragments :: style"/>
+    <div th:include="fragments :: imports"/>
 </head>
 <body>
 
-<div th:replace="fragments :: header"></div>
+<div th:replace="fragments :: bsnav"></div>
 
-<div style="padding:50px;margin-top:50px;">
+<div class="container">
 
 <div th:if="${param.error}">
     Access forbidden. Invalid credentials or too many attempts.

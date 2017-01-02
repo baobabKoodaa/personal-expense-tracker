@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.security.AccessControlException;
 import java.security.InvalidParameterException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ReqController {
@@ -27,12 +28,14 @@ public class ReqController {
     @RequestMapping("/")
     public String defaultMapping(Model model, Principal auth) {
         User user = dao.findUserByLoginname(auth.getName());
-        Book book = dao.detLatestBookForUser(user);
+        Book activeBook = dao.detLatestBookForUser(user);
+        List<Book> books = dao.getReadBooksForUser(user);
 
         model.addAttribute("user", auth.getName());
-        model.addAttribute("book", book);
-        model.addAttribute("categories", dao.findCategoriesByGroupId(book.getGroupId()));
-        model.addAttribute("expenses", dao.findSomeRecentExpenses(book));
+        model.addAttribute("activeBook", activeBook);
+        model.addAttribute("books", books);
+        model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
+        model.addAttribute("expenses", dao.findSomeRecentExpenses(activeBook));
         return "index";
     }
 
@@ -85,6 +88,16 @@ public class ReqController {
             throw new AccessControlException("User does not have write access to this book!");
         }
         dao.deleteExpense(expense);
+        return "redirect:/";
+    }
+
+    @GetMapping("/book/{id}")
+    public String processGetBookRequest(@PathVariable long id, Principal auth) {
+        User user = dao.findUserByLoginname(auth.getName());
+        Book book = dao.findBookById(id);
+        if (dao.hasReadAccess(user, book)) {
+            dao.setLatestBook(user, book);
+        }
         return "redirect:/";
     }
 

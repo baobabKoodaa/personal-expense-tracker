@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class DAO {
@@ -45,6 +45,11 @@ public class DAO {
     public boolean hasWriteAccess(User user, Book book) {
         WriteAccess writeAccess = writeAccessRepository.findOneByBookAndUser(book, user);
         return (writeAccess != null);
+    }
+
+    public boolean hasReadAccess(User user, Book book) {
+        ReadAccess readAccess = readAccessRepository.findOneByBookAndUser(book, user);
+        return (readAccess != null);
     }
 
     public User createUser(String userName, String clearTextPassword) {
@@ -153,4 +158,26 @@ public class DAO {
     public List<Category> findCategoriesByGroupId(long groupId) {
         return categoryRepository.findByGroupId(groupId);
     }
+
+    public List<Book> getReadBooksForUser(User user) {
+        Set<ReadAccess> readAccessSet = user.getReadAccessSet();
+        List<Book> list = new ArrayList<Book>();
+        for (ReadAccess r : readAccessSet) {
+            list.add(r.getBook());
+        }
+        Collections.sort(list, ALPHABETICAL_ORDER);
+        return list;
+    }
+
+    private static Comparator<Book> ALPHABETICAL_ORDER = new Comparator<Book>() {
+        public int compare(Book book1, Book book2) {
+            return book1.getName().compareTo(book2.getName());
+        }
+    };
+
+    public void setLatestBook(User user, Book book) {
+        user.setLatestRead(book);
+        userRepository.save(user);
+    }
+
 }

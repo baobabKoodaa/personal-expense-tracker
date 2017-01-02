@@ -2,14 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <div th:include="fragments :: style"/>
+    <div th:include="fragments :: imports"/>
 </head>
 <body>
 
 
-<div th:replace="fragments :: header"></div>
+<div th:replace="fragments :: bsnav"></div>
 
-<div style="padding:50px;margin-top:50px;">
+<div class="container">
+
+    <h3>Add new expense</h3>
 
 <form action="#" th:action="@{/postExpense}" method="POST">
     <p><label for="year">Year</label>: <input type="number" name="year" id="year"/></p>
@@ -27,12 +29,13 @@
 
 
     <p><label for="amountRaw">Amount</label>: <input type="text" name="amountRaw" id="amountRaw"/></p>
-    <input type="text" name="bookId" id="bookId" hidden="true" th:value="${book.id}"/>
+    <input type="text" name="bookId" id="bookId" hidden="true" th:value="${activeBook.id}"/>
     <input type="text" name="previousVersion" id="previousVersion" hidden="true"/>
     <p><input type="submit" value="Add expense" /></p>
 </form>
 
-<h3>Accessing book: <span th:text="${book.name}"></span></h3>
+    <hr/>
+    <h3>View expenses</h3>
 
 <ul>
     <li th:each="item : ${expenses}">

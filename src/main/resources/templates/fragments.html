@@ -7,15 +7,46 @@
             <title>Personal Expense Tracker</title>
             <link href="templates/style.css" rel="stylesheet" />
         </div>
+
+        <div th:fragment="imports">
+            <title>Bootstrap Case</title>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        </div>
+
     </head>
     <body>
         <div th:fragment="header">
             <nav>
                 <ul class="navcontainer">
                     <li class="navtitle"><a href="/"><h2>Personal Expense Tracker</h2></a></li>
-                    <li class="navlogout" th:inline="text" style="float:right"><a href="/logout">[[(${user != null ? 'Logout ' + user : ''})]]</a></li>
+
 
                 </ul>
+            </nav>
+        </div>
+
+        <div th:fragment="bsnav">
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/">Personal Expense Tracker</a>
+                    </div>
+                    <ul class="nav navbar-nav">
+                        <li th:each="book : ${books}" th:class="${book.id == activeBook.id ? 'active' : 'inactive'}">
+                            <a th:href="${'book/' + book.id}"><span th:text="${book.name}">Book</span></a>
+                        </li>
+                        <li th:if="${user} != null" class="inactive"><a href="/newBook">New Book</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--<li th:if="${user} != null" th:inline="text"><a href="/profile"><span class="glyphicon glyphicon-user"></span>[[${user}]]</a></li>-->
+                        <li th:if="${user} != null" th:inline="text"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>[[${' Logout ' + user}]]</a></li>
+                        <li th:if="${user} == null"><a href="/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    </ul>
+                </div>
             </nav>
         </div>
 

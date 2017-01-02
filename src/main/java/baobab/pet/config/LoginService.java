@@ -32,6 +32,7 @@ public class LoginService implements UserDetailsService {
 
         User atte = dao.createUser("atte", "1");
         Book bookA = dao.createBook("Atte's expenses", atte);
+        Book bookC = dao.createBook("Common expenses", atte);
         dao.createExpense(2016, 10, bookA, "food/fast food", 1083, atte);
         dao.createExpense(2016, 11, bookA, "food/high end", 2045, atte);
         dao.createExpense(2016, 12, bookA, "food/fast food", 830, atte);
