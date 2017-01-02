@@ -45,7 +45,7 @@ public class Category {
         this.groupId = groupId;
     }
 
-    public String[] bahCategorySplitted() {
+    public String[] parseSubCategories() {
         String raw = this.getName();
         String[] out = new String[3];
         out[0] = "";

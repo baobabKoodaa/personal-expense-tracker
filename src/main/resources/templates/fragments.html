@@ -27,7 +27,7 @@
 
             .expense-post-form .field label { display:inline-block; width:100px; margin-left:5px; }
 
-            .expense-post-form .field input { display:inline-block; }
+            .expense-post-form .field input { display:inline-block; width:170px; }
         </style>
         </div>
 
@@ -51,7 +51,7 @@
                     </div>
                     <ul class="nav navbar-nav">
                         <li th:each="book : ${books}" th:class="${book.id == activeBook.id ? 'active' : 'inactive'}">
-                            <a th:href="${'book/' + book.id}"><span th:text="${book.name}">Book</span></a>
+                            <a th:href="${'select/' + book.id}"><span th:text="${book.name}">Book</span></a>
                         </li>
                         <li th:if="${user} != null" class="inactive"><a href="/newBook">New Book</a></li>
                     </ul>

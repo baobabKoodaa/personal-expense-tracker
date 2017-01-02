@@ -1,5 +1,7 @@
 package baobab.pet.data.domain;
 
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,9 +15,14 @@ public class User {
     private String role;
     private Set<ReadAccess> readAccessSet;
     private Book latestRead;
-    private int latestInputYear;
-    private int latestInputMonth;
     private Set<WriteAccess> writeAccessSet;
+
+    @Transient
+    private int latestInputYear;
+    @Transient
+    private int latestInputMonth;
+    @Transient
+    private boolean requestingToViewAllExpenses;
 
     public User() {
         super();
@@ -28,6 +35,8 @@ public class User {
         this.name = name;
         this.encodedPassword = encodedPassword;
         this.role = "NORMAL_USER";
+        this.latestInputMonth = DateTime.now().getMonthOfYear();
+        this.latestInputYear = DateTime.now().getYear();
     }
 
     @Id
@@ -109,5 +118,13 @@ public class User {
 
     public void setLatestInputMonth(int latestInputMonth) {
         this.latestInputMonth = latestInputMonth;
+    }
+
+    public boolean isRequestingToViewAllExpenses() {
+        return requestingToViewAllExpenses;
+    }
+
+    public void setRequestingToViewAllExpenses(boolean requestingToViewAllExpenses) {
+        this.requestingToViewAllExpenses = requestingToViewAllExpenses;
     }
 }

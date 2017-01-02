@@ -12,7 +12,7 @@ public class Expense {
     private int year;
     private int month;
     private Book book;
-    private Category lowestSubCategory;
+    private Category category;
     private long amountCents;
     private User user;
     private Long previousVersionId;
@@ -23,13 +23,13 @@ public class Expense {
         super();
     }
 
-    public Expense(int year, int month, Book book, Category lowestSubCategory, long amountCents, User user) {
+    public Expense(int year, int month, Book book, Category category, long amountCents, User user) {
         this();
         this.current = true;
         this.year = year;
         this.month = month;
         this.book = book;
-        this.lowestSubCategory = lowestSubCategory;
+        this.category = category;
         this.amountCents = amountCents;
         this.user = user;
         this.timeAdded = DateTime.now().getMillis();
@@ -115,12 +115,12 @@ public class Expense {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    public Category getLowestSubCategory() {
-        return lowestSubCategory;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setLowestSubCategory(Category lowestSubCategory) {
-        this.lowestSubCategory = lowestSubCategory;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public boolean isCurrent() {
@@ -129,5 +129,9 @@ public class Expense {
 
     public void setCurrent(boolean current) {
         this.current = current;
+    }
+
+    public String parseTimeAdded() {
+        return new DateTime((this.getTimeAdded())).toString("dd/MM/yyyy");
     }
 }

@@ -46,7 +46,12 @@
 
 
     <hr/>
-    <h3><span th:text="${'Recent entries in ' + activeBook.name}">book</span></h3>
+    <h3>
+        <span th:text="(${allExpensesAreListed} ?
+                        ${'All entries in ' + activeBook.name + ' sorted by date'} :
+                        ${'Recent entries in ' + activeBook.name})">book
+        </span>
+    </h3>
     <div style="overflow-x:auto;">
         <table>
             <tr>
@@ -62,10 +67,10 @@
             <tr th:each="item : ${expenses}">
                 <td><span th:text="${item.month}">12</span>/<span th:text="${item.year}">2016</span></td>
                 <td><span th:text="${item.amountCents / 100}">6</span>.<span th:text="(${item.amountCents % 100 == 0} ? '00' : ${item.amountCents % 100})">6</span>€</td>
-                <td th:each="subCategory : ${item.lowestSubCategory.bahCategorySplitted()}">
-                    <span th:text="${subCategory}">test</span>
+                <td th:each="subCategory : ${item.category.parseSubCategories()}">
+                    <span th:text="${subCategory}">subcategory</span>
                 </td>
-                <td><span th:text="${item.user.name}">sarah</span></td>
+                <td><span th:text="${item.parseTimeAdded()}">01/02/2017</span></td>
                 <td><span th:text="${item.user.name}">sarah</span></td>
                 <td>
                     <form th:action="@{/deleteExpense}" th:method="DELETE">
@@ -76,8 +81,12 @@
             </tr>
         </table>
     </div>
+    <p>
+        <form th:action="@{/viewAllExpenses}" th:method="GET">
+        <input type="submit" style="width:170px" id="displayAll" value="View all"/>
+        </form>
 
-<p></p>
+    </p>
 </div>
 </body>
 </html>

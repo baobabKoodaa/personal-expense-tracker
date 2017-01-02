@@ -35,8 +35,21 @@ public class ReqController {
         model.addAttribute("activeBook", activeBook);
         model.addAttribute("books", books);
         model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
-        model.addAttribute("expenses", dao.findSomeRecentExpenses(activeBook));
+        if (user.isRequestingToViewAllExpenses()) {
+            dao.setFlagShowAllExpensesTo(user, false);
+            model.addAttribute("allExpensesAreListed", true);
+            model.addAttribute("expenses", dao.findAllCurrentExpenses(activeBook));
+        } else {
+            model.addAttribute("expenses", dao.findSomeRecentExpenses(activeBook));
+        }
         return "index";
+    }
+
+    @RequestMapping("/viewAllExpenses")
+    public String processViewAllRequest(Principal auth) {
+        User user = dao.findUserByName(auth.getName());
+        dao.setFlagShowAllExpensesTo(user, true);
+        return "redirect:/";
     }
 
     /** Adding or modifying an expense. */
@@ -92,7 +105,7 @@ public class ReqController {
         return "redirect:/";
     }
 
-    @GetMapping("/book/{id}")
+    @GetMapping("/select/{id}")
     public String processGetBookRequest(@PathVariable long id, Principal auth) {
         User user = dao.findUserByName(auth.getName());
         Book book = dao.findBookById(id);

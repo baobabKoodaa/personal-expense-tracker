@@ -132,9 +132,9 @@ public class DAO {
         return expenseRepository.findByBookAndCurrentOrderByYearDescMonthDesc(book, true);
     }
 
-    public Expense createExpense(int year, int month, Book book, String category, long amountCents, User user) {
-        Category lowestSubCategory = detCategory(category, book);
-        Expense expense = new Expense(year, month, book, lowestSubCategory, amountCents, user);
+    public Expense createExpense(int year, int month, Book book, String categoryName, long amountCents, User user) {
+        Category category = detCategory(categoryName, book);
+        Expense expense = new Expense(year, month, book, category, amountCents, user);
         expenseRepository.save(expense);
         return expense;
     }
@@ -186,4 +186,8 @@ public class DAO {
         userRepository.save(user);
     }
 
+    public void setFlagShowAllExpensesTo(User user, boolean bool) {
+        user.setRequestingToViewAllExpenses(bool);
+        userRepository.save(user);
+    }
 }
