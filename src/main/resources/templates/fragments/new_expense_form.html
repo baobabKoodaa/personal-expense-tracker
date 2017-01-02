@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="new_expense_form">
+    <h3>Add new expense</h3>
+
+    <form class="post-form" action="#" th:action="@{/postExpense}" method="POST">
+        <div class="field">
+            <label for="year">Year</label>
+            <input type="number" name="year" id="year" th:value="${user.latestInputYear}"/>
+        </div>
+        <div class="field">
+            <label for="month">Month</label>
+            <input type="number" name="month" id="month" th:value="${user.latestInputMonth}"/>
+        </div>
+        <div class="field">
+            <label for="amountRaw">Amount</label>
+            <input type="text" name="amountRaw" id="amountRaw"/>
+        </div>
+        <div class="field">
+            <label for="category">Category</label>
+            <input type='text' name="category" id="category" list='listid'>
+            <datalist id='listid'>
+                <option th:each="category : *{categories}" th:value="${category.name}"></option>
+            </datalist>
+            </input>
+        </div>
+        <input type="text" name="bookId" id="bookId" hidden="true" th:value="${activeBook.id}"/>
+        <input type="text" name="previousVersion" id="previousVersion" hidden="true"/>
+        <div class="field">
+            <label for="submit"></label>
+            <input type="submit" id="submit" value="Add expense" />
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

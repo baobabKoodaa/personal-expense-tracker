@@ -58,12 +58,9 @@ public class DAO {
         return user;
     }
 
-    /** Tries to, in order,
-     * 1. Return most recently used book
-     * 2. Return any book
-     * 3. Create new book and return it. */
+    /** Returns most recently used book or any book. */
     @Transactional
-    public Book detLatestBookForUser(User user) {
+    public Book getLatestBookForUser(User user) {
         Book latest = user.getLatestRead();
         if (latest == null) {
             /** Assign any accessible book as latest. */
@@ -72,11 +69,6 @@ public class DAO {
                 setBookAsLatestForUser(latest, user);
                 break;
             }
-        }
-        if (latest == null) {
-            /** If user has deleted all their books. */
-            latest = createBook("New book", user);
-            setBookAsLatestForUser(latest, user);
         }
         return latest;
     }
@@ -97,6 +89,7 @@ public class DAO {
         ensureBookHasValidGroupId(book);
         readAccessRepository.save(new ReadAccess(book, user));
         writeAccessRepository.save(new WriteAccess(book, user));
+        setBookAsLatestForUser(book, user);
         return book;
     }
 
@@ -126,6 +119,10 @@ public class DAO {
 
     public List<Expense> findSomeRecentExpenses(Book book) {
         return expenseRepository.findFirst10ByBookAndCurrentOrderByTimeAddedDesc(book, true);
+    }
+
+    public long getBookSize(Book book) {
+        return expenseRepository.countByBook(book);
     }
 
     public List<Expense> findAllCurrentExpenses(Book book) {

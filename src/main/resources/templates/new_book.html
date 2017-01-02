@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="fragments/styles_and_scripts :: imports"/>
+</head>
+<body>
+
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <form class="post-form" th:action="@{/newBook}" method="post">
+        <div class="field">
+            <label for="bookName"> Book name: </label>
+            <input type="text" id="bookName" name="bookName" th:value="${user.name + '''s expenses'}"/>
+        </div>
+        <div class="field">
+            <label for="submit"></label>
+            <input type="submit" value="Create Book" id="submit"/>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

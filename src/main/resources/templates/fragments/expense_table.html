@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="expense_table">
+
+    <h3>
+            <span th:text="(${allExpensesAreListed} ?
+                            ${'All entries in ' + activeBook.name + ' sorted by date'} :
+                            ${'Recent entries in ' + activeBook.name})">book
+            </span>
+    </h3>
+    <div style="overflow-x:auto;">
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Category</th>
+                <th>Category</th>
+                <th>Added on</th>
+                <th>Added by</th>
+                <th>Options</th>
+            </tr>
+            <tr th:each="item : ${expenses}">
+                <td><span th:text="${item.month}">12</span>/<span th:text="${item.year}">2016</span></td>
+                <td><span th:text="${item.amountCents / 100}">6</span>.<span th:text="(${item.amountCents % 100 == 0} ? '00' : ${item.amountCents % 100})">6</span>€</td>
+                <td th:each="subCategory : ${item.category.parseSubCategories()}">
+                    <span th:text="${subCategory}">subcategory</span>
+                </td>
+                <td><span th:text="${item.parseTimeAdded()}">01/02/2017</span></td>
+                <td><span th:text="${item.user.name}">sarah</span></td>
+                <td>
+                    <form class="post-form" th:action="@{/deleteExpense}" th:method="DELETE">
+                        <input type="text" name="id" id="id" th:value="${item.id}" hidden="false"/>
+                        <input type="submit" value="Delete"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p>
+    <div style="display:inline-block;">
+        <form class="post-form" th:action="@{/viewAllExpenses}" th:method="GET">
+            <input type="submit" style="width:170px; padding:4px; margin:1px;" id="displayAll" th:value="${'View all ' + expenseCount}"/>
+        </form>
+    </div>
+
+    <div style="display:inline-block; float:right;">
+        <form class="post-form" th:action="@{/modifyBook}" th:method="GET">
+            <input type="submit" style="width:170px; padding:4px; margin:1px; align-content:right" id="modifyBook" value="Modify book"/>
+        </form>
+    </div>
+    </p>
+</div>
+</body>
+</html>

@@ -28,12 +28,15 @@ public class ReqController {
     @RequestMapping("/")
     public String defaultMapping(Model model, Principal auth) {
         User user = dao.findUserByName(auth.getName());
-        Book activeBook = dao.detLatestBookForUser(user);
-        List<Book> books = dao.getReadBooksForUser(user);
-
         model.addAttribute("user", user);
-        model.addAttribute("activeBook", activeBook);
+        List<Book> books = dao.getReadBooksForUser(user);
         model.addAttribute("books", books);
+        Book activeBook = dao.getLatestBookForUser(user);
+        if (activeBook == null) {
+            return "welcome";
+        }
+        model.addAttribute("activeBook", activeBook);
+        model.addAttribute("expenseCount", dao.getBookSize(activeBook));
         model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
         if (user.isRequestingToViewAllExpenses()) {
             dao.setFlagShowAllExpensesTo(user, false);
@@ -113,6 +116,32 @@ public class ReqController {
             dao.setLatestBook(user, book);
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/newBook")
+    public String serveNewBookTemplate(Model model, Principal auth) {
+        User user = dao.findUserByName(auth.getName());
+        List<Book> books = dao.getReadBooksForUser(user);
+        model.addAttribute("books", books);
+        model.addAttribute("user", user);
+        return "new_book";
+    }
+
+    @PostMapping("/newBook")
+    public String processNewBookPost(@RequestParam String bookName, Principal auth) {
+        User user = dao.findUserByName(auth.getName());
+        dao.createBook(bookName, user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/modifyBook")
+    public String serveModifyBookTemplate(Model model, Principal auth) {
+        User user = dao.findUserByName(auth.getName());List<Book> books = dao.getReadBooksForUser(user);
+        Book activeBook = dao.getLatestBookForUser(user);
+        model.addAttribute("activeBook", activeBook);
+        model.addAttribute("books", books);
+        model.addAttribute("user", user);
+        return "modify_book";
     }
 
     @GetMapping("/login")

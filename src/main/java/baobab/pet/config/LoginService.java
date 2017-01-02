@@ -48,6 +48,8 @@ public class LoginService implements UserDetailsService {
         dao.createExpense(2016, 12, bookM, "entertainment", 10, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", 30, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", 30, mikko);
+
+        User nomad = dao.createUser("nomad", "1");
     }
 
     @Override
