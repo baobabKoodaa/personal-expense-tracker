@@ -30,8 +30,8 @@ public class DAO {
     @Autowired
     WriteAccessRepository writeAccessRepository;
 
-    public User findUserByLoginname(String loginname) {
-        return userRepository.findOneByLoginname(loginname);
+    public User findUserByName(String name) {
+        return userRepository.findOneByName(name);
     }
 
     public Book findBookById(Long bookId) {
@@ -177,6 +177,12 @@ public class DAO {
 
     public void setLatestBook(User user, Book book) {
         user.setLatestRead(book);
+        userRepository.save(user);
+    }
+
+    public void setLatestInputDate(User user, int month, int year) {
+        user.setLatestInputMonth(month);
+        user.setLatestInputYear(year);
         userRepository.save(user);
     }
 

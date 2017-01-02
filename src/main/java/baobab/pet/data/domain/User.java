@@ -8,11 +8,13 @@ import java.util.Set;
 public class User {
 
     private long id;
-    private String loginname;
+    private String name;
     private String encodedPassword;
     private String role;
     private Set<ReadAccess> readAccessSet;
     private Book latestRead;
+    private int latestInputYear;
+    private int latestInputMonth;
     private Set<WriteAccess> writeAccessSet;
 
     public User() {
@@ -21,9 +23,9 @@ public class User {
         this.writeAccessSet = new HashSet<>();
     }
 
-    public User(String loginname, String encodedPassword) {
+    public User(String name, String encodedPassword) {
         this();
-        this.loginname = loginname;
+        this.name = name;
         this.encodedPassword = encodedPassword;
         this.role = "NORMAL_USER";
     }
@@ -39,12 +41,12 @@ public class User {
     }
 
     @Column(unique = true, nullable = false)
-    public String getLoginname() {
-        return loginname;
+    public String getName() {
+        return name;
     }
 
-    public void setLoginname(String loginname) {
-        this.loginname = loginname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Column(length = 60, nullable = false)
@@ -91,5 +93,21 @@ public class User {
 
     public void setLatestRead(Book latestRead) {
         this.latestRead = latestRead;
+    }
+
+    public int getLatestInputYear() {
+        return latestInputYear;
+    }
+
+    public void setLatestInputYear(int latestInputYear) {
+        this.latestInputYear = latestInputYear;
+    }
+
+    public int getLatestInputMonth() {
+        return latestInputMonth;
+    }
+
+    public void setLatestInputMonth(int latestInputMonth) {
+        this.latestInputMonth = latestInputMonth;
     }
 }

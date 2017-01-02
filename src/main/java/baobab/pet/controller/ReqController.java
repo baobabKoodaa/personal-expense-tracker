@@ -27,11 +27,11 @@ public class ReqController {
 
     @RequestMapping("/")
     public String defaultMapping(Model model, Principal auth) {
-        User user = dao.findUserByLoginname(auth.getName());
+        User user = dao.findUserByName(auth.getName());
         Book activeBook = dao.detLatestBookForUser(user);
         List<Book> books = dao.getReadBooksForUser(user);
 
-        model.addAttribute("user", auth.getName());
+        model.addAttribute("user", user);
         model.addAttribute("activeBook", activeBook);
         model.addAttribute("books", books);
         model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
@@ -51,7 +51,7 @@ public class ReqController {
             @RequestParam String previousVersion,
             Principal auth
     ) {
-        User user = dao.findUserByLoginname(auth.getName());
+        User user = dao.findUserByName(auth.getName());
         Book book = dao.findBookById(bookId);
         if (!dao.hasWriteAccess(user, book)) {
             throw new AccessControlException("User does not have write access to this book!");
@@ -59,6 +59,7 @@ public class ReqController {
         long amountCents = getAmountInCents(amountRaw);
         validateInputYear(year);
         validateInputMonth(month);
+        dao.setLatestInputDate(user, year, month);
         if (previousVersion.isEmpty()) {
             /* When adding a new expense. */
             dao.createExpense(year, month, book, category, amountCents, user);
@@ -81,7 +82,7 @@ public class ReqController {
 
     @DeleteMapping("/deleteExpense")
     public String processRequestToDeleteExpense(@RequestParam long id, Principal auth) {
-        User user = dao.findUserByLoginname(auth.getName());
+        User user = dao.findUserByName(auth.getName());
         Expense expense = dao.findExpenseById(id);
         Book book = expense.getBook();
         if (!dao.hasWriteAccess(user, book)) {
@@ -93,7 +94,7 @@ public class ReqController {
 
     @GetMapping("/book/{id}")
     public String processGetBookRequest(@PathVariable long id, Principal auth) {
-        User user = dao.findUserByLoginname(auth.getName());
+        User user = dao.findUserByName(auth.getName());
         Book book = dao.findBookById(id);
         if (dao.hasReadAccess(user, book)) {
             dao.setLatestBook(user, book);

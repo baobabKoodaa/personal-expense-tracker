@@ -57,12 +57,12 @@ public class LoginService implements UserDetailsService {
             throw new RuntimeException("IP address temporarily blocked for too many password attempts.");
         }
 
-        User user = dao.findUserByLoginname(username);
+        User user = dao.findUserByName(username);
         if (user == null) {
             throw new UsernameNotFoundException("No such user: " + username);
         }
         return new org.springframework.security.core.userdetails.User(
-                user.getLoginname(),
+                user.getName(),
                 user.getEncodedPassword(),
                 true,
                 true,

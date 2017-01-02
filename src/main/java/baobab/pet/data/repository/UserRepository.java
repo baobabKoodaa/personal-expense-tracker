@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import baobab.pet.data.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findOneByLoginname(String loginname);
+    User findOneByName(String name);
 }
