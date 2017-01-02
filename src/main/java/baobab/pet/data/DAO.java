@@ -166,9 +166,14 @@ public class DAO {
         return list;
     }
 
+    /** Alphabetic comparator for books.
+     *  Uses id to break ties.
+     *  Deterministic behavior is needed for navigation bar. */
     private static Comparator<Book> ALPHABETICAL_ORDER = new Comparator<Book>() {
         public int compare(Book book1, Book book2) {
-            return book1.getName().compareTo(book2.getName());
+            String a = book1.getName() + book1.getId();
+            String b = book2.getName() + book2.getId();
+            return a.compareTo(b);
         }
     };
 
