@@ -13,21 +13,33 @@
 
     <h3>Add new expense</h3>
 
-<form action="#" th:action="@{/postExpense}" method="POST">
-    <p><label for="year">Year</label>: <input type="number" name="year" id="year" th:value="${user.latestInputYear}"/></p>
-    <p><label for="month">Month</label>: <input type="number" name="month" id="month" th:value="${user.latestInputMonth}"/></p>
-    <p>
-        <label for="category">Category</label>:
-        <input type='text' name="category" id="category" list='listid'>
-        <datalist id='listid'>
-            <option th:each="category : *{categories}" th:value="${category.name}"></option>
-        </datalist>
-        </input>
-    </p>
-    <p><label for="amountRaw">Amount</label>: <input type="text" name="amountRaw" id="amountRaw"/></p>
-    <input type="text" name="bookId" id="bookId" hidden="true" th:value="${activeBook.id}"/>
-    <input type="text" name="previousVersion" id="previousVersion" hidden="true"/>
-    <p><input type="submit" value="Add expense" /></p>
+<form class="expense-post-form" action="#" th:action="@{/postExpense}" method="POST">
+    <div class="field">
+        <label for="year">Year</label>
+        <input type="number" name="year" id="year" th:value="${user.latestInputYear}"/>
+    </div>
+    <div class="field">
+        <label for="month">Month</label>
+        <input type="number" name="month" id="month" th:value="${user.latestInputMonth}"/>
+    </div>
+    <div class="field">
+        <label for="amountRaw">Amount</label>
+        <input type="text" name="amountRaw" id="amountRaw"/>
+    </div>
+    <div class="field">
+            <label for="category">Category</label>
+            <input type='text' name="category" id="category" list='listid'>
+            <datalist id='listid'>
+                <option th:each="category : *{categories}" th:value="${category.name}"></option>
+            </datalist>
+            </input>
+    </div>
+        <input type="text" name="bookId" id="bookId" hidden="true" th:value="${activeBook.id}"/>
+        <input type="text" name="previousVersion" id="previousVersion" hidden="true"/>
+    <div class="field">
+        <label for="submit"></label>
+        <input type="submit" id="submit" value="Add expense" />
+    </div>
 </form>
 
 
@@ -39,16 +51,20 @@
         <table>
             <tr>
                 <th>Date</th>
-                <th>Category</th>
                 <th>Amount</th>
+                <th>Category</th>
+                <th>Category</th>
+                <th>Category</th>
                 <th>Added on</th>
                 <th>Added by</th>
                 <th>Options</th>
             </tr>
             <tr th:each="item : ${expenses}">
                 <td><span th:text="${item.month}">12</span>/<span th:text="${item.year}">2016</span></td>
-                <td><span th:text="${item.lowestSubCategory.name}">food</span></td>
                 <td><span th:text="${item.amountCents / 100}">6</span>.<span th:text="(${item.amountCents % 100 == 0} ? '00' : ${item.amountCents % 100})">6</span>€</td>
+                <td th:each="subCategory : ${item.lowestSubCategory.bahCategorySplitted()}">
+                    <span th:text="${subCategory}">test</span>
+                </td>
                 <td><span th:text="${item.user.name}">sarah</span></td>
                 <td><span th:text="${item.user.name}">sarah</span></td>
                 <td>

@@ -180,7 +180,7 @@ public class DAO {
         userRepository.save(user);
     }
 
-    public void setLatestInputDate(User user, int month, int year) {
+    public void setLatestInputDate(User user, int year, int month) {
         user.setLatestInputMonth(month);
         user.setLatestInputYear(year);
         userRepository.save(user);
