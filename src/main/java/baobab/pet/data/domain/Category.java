@@ -7,7 +7,6 @@ public class Category {
 
     private long id;
     private long groupId; /* determines which categories are available to which books. */
-    private Long parentCategoryId;
     private String name;
 
     public Category() {
@@ -28,15 +27,6 @@ public class Category {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @Column(nullable = true)
-    public Long getParentCategoryId() {
-        return parentCategoryId;
-    }
-
-    public void setParentCategoryId(Long parentCategoryId) {
-        this.parentCategoryId = parentCategoryId;
     }
 
     public String getName() {

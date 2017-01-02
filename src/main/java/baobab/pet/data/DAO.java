@@ -53,12 +53,6 @@ public class DAO {
         return user;
     }
 
-    public Category createCategory(String categoryName, Book book) {
-        Category category = new Category(categoryName, book.getGroupId());
-        categoryRepository.save(category);
-        return category;
-    }
-
     /** Tries to, in order,
      * 1. Return most recently used book
      * 2. Return any book
@@ -127,6 +121,10 @@ public class DAO {
 
     public List<Expense> findSomeRecentExpenses(Book book) {
         return expenseRepository.findFirst10ByBookAndCurrentOrderByTimeAddedDesc(book, true);
+    }
+
+    public List<Expense> findAllCurrentExpenses(Book book) {
+        return expenseRepository.findByBookAndCurrentOrderByYearDescMonthDesc(book, true);
     }
 
     public Expense createExpense(int year, int month, Book book, String category, long amountCents, User user) {

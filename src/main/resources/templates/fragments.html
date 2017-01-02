@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+
+        <div th:fragment="style">
+            <meta charset="UTF-8"/>
+            <title>Personal Expense Tracker</title>
+            <link href="templates/style.css" rel="stylesheet" />
+        </div>
+    </head>
+    <body>
+        <div th:fragment="header">
+            <nav>
+                <ul class="navcontainer">
+                    <li class="navtitle"><a href="/"><h2>Personal Expense Tracker</h2></a></li>
+                    <li class="navlogout" th:inline="text" style="float:right"><a href="/logout">[[(${user != null ? 'Logout ' + user : ''})]]</a></li>
+
+                </ul>
+            </nav>
+        </div>
+
+
+        <div th:fragment="footer">
+            &copy; 2016 Footer
+        </div>
+    </body>
+</html>
