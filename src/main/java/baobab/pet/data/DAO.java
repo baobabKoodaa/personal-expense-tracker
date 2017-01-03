@@ -194,11 +194,8 @@ public class DAO {
         userRepository.save(user);
     }
 
-    public void setPassword(User user, String oldClearTextPassword, String newClearTextPassword) {
-        if (!passwordEncoder.matches(oldClearTextPassword, user.getEncodedPassword())) {
-            throw new InvalidParameterException("Old password does not match the one on record!");
-        }
-        user.setEncodedPassword(encode(newClearTextPassword));
+    public void setPassword(User user, String clearTextPassword) {
+        user.setEncodedPassword(encode(clearTextPassword));
         userRepository.save(user);
     }
 

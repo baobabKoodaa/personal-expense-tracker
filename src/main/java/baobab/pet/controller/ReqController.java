@@ -4,12 +4,14 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import baobab.pet.data.domain.*;
 import baobab.pet.data.DAO;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +26,9 @@ public class ReqController {
 
     @Autowired
     DAO dao;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @RequestMapping("/")
     public String defaultMapping(Model model, Principal auth) {
@@ -147,12 +152,13 @@ public class ReqController {
     }
 
     @GetMapping("/profile")
-    public String getPageProfile(Model model, Principal auth) {
+    public String getPageProfile(Model model, Principal auth, RedirectAttributes redirectAttributes) {
         User user = dao.findUserByName(auth.getName());
         List<Book> books = dao.getReadBooksForUser(user);
         model.addAttribute("books", books);
         model.addAttribute("user", user);
         model.addAttribute("activeId", "profile");
+        redirectAttributes.addFlashAttribute("message", "test2");
         return "profile";
     }
 
@@ -161,11 +167,21 @@ public class ReqController {
             @RequestParam String oldPassword,
             @RequestParam String newPassword,
             Model model,
-            Principal auth
+            Principal auth,
+            RedirectAttributes r
     ) {
         User user = dao.findUserByName(auth.getName());
-        dao.setPassword(user, oldPassword, newPassword);
-        return "redirect:/profile?passwordChangeSuccess";
+        if (!passwordEncoder.matches(oldPassword, user.getEncodedPassword())) {
+            flashMessage("Old password does not match the one on record.", r);
+        } else {
+            flashMessage("Password changed succesfully.", r);
+            dao.setPassword(user, newPassword);
+        }
+        return "redirect:/profile";
+    }
+
+    private void flashMessage(String content, RedirectAttributes container) {
+        container.addFlashAttribute("flashMessage", content);
     }
 
     @GetMapping("/login")

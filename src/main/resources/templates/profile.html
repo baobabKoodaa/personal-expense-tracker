@@ -11,9 +11,7 @@
 
 <div class="container">
 
-    <div th:if="${param.passwordChangeSuccess}">
-        <p>Password changed succesfully.</p>
-    </div>
+    <p><span th:text="${flashMessage}"></span></p>
 
     <form class="post-form" th:action="@{/changePassword}" method="post">
         <div class="field">
@@ -29,6 +27,10 @@
             <input type="submit" value="Change password" id="submit"/>
         </div>
     </form>
+
+    <div th:if="${user.role == 'ADMIN'}">
+        <hr/>
+    </div>
 
     <div th:if="${user.role == 'ADMIN'}">
         <hr/>
