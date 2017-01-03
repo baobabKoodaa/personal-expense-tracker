@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="view_table_users">
+
+    <h3>All users</h3>
+    <div style="overflow-x:auto;">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Role</th>
+                <th>Options</th>
+            </tr>
+            <tr th:each="item : ${users}">
+                <td><span th:text="${item.name}">12</span></td>
+                <td><span th:text="${item.id}">12</span></td>
+                <td><span th:text="${item.role}">12</span></td>
+                <td>
+                    <form class="post-form" th:action="@{/disableUser}" th:method="DELETE">
+                        <input type="text" name="targetName" id="targetName" th:value="${item.name}" hidden="true"/>
+                        <input type="submit" value="Delete"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

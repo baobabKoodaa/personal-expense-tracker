@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="form_new_user">
+
+    <h3>Create new user</h3>
+    <form class="post-form" th:action="@{/newUser}" method="post">
+        <div class="widef">
+            <label for="newUserName">Username: </label>
+            <input type="text" id="newUserName" name="newUserName"/>
+        </div>
+        <div class="widef">
+            <label for="newUserPassword">Password: </label>
+            <input type="text" id="newUserPassword" name="newUserPassword"/>
+        </div>
+        <div class="widef">
+            <label for="submit"></label>
+            <input type="submit" value="Create User" id="submit"/>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

@@ -203,4 +203,13 @@ public class DAO {
     public String encode(String plaintextPassword) {
         return BCrypt.hashpw(plaintextPassword, BCrypt.gensalt());
     }
+
+    public List<User> getUsers() {
+        return userRepository.findByCurrentOrderByIdAsc(true);
+    }
+
+    public void disableUser(User user) {
+        user.setCurrent(false);
+        userRepository.save(user);
+    }
 }

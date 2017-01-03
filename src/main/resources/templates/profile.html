@@ -13,24 +13,13 @@
 
     <p><span th:text="${flashMessage}"></span></p>
 
-    <form class="post-form" th:action="@{/changePassword}" method="post">
-        <div class="field">
-            <label style="width:120px;" for="oldPassword">Old password: </label>
-            <input type="text" id="oldPassword" name="oldPassword"/>
-        </div>
-        <div class="field">
-            <label style="width:120px;" for="newPassword">New password: </label>
-            <input type="text" id="newPassword" name="newPassword"/>
-        </div>
-        <div class="field">
-            <label style="width:120px;" for="submit"></label>
-            <input type="submit" value="Change password" id="submit"/>
-        </div>
-    </form>
+    <div th:include="fragments/form_modify_password :: form_modify_password"/>
 
     <div th:if="${user.role == 'ADMIN'}">
         <hr/>
-
+        <div th:include="fragments/form_new_user :: form_new_user"/>
+        <hr/>
+        <div th:include="fragments/view_table_users :: view_table_users"/>
     </div>
 
 

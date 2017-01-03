@@ -10,6 +10,7 @@ import java.util.Set;
 public class User {
 
     private long id;
+    private boolean current;
     private String name;
     private String encodedPassword;
     private String role;
@@ -26,6 +27,7 @@ public class User {
 
     public User() {
         super();
+        this.current = true;
         this.readAccessSet = new HashSet<>();
         this.writeAccessSet = new HashSet<>();
     }
@@ -126,5 +128,13 @@ public class User {
 
     public void setRequestingToViewAllExpenses(boolean requestingToViewAllExpenses) {
         this.requestingToViewAllExpenses = requestingToViewAllExpenses;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
     }
 }

@@ -21,14 +21,13 @@ import java.security.InvalidParameterException;
 import java.security.Principal;
 import java.util.List;
 
+import static baobab.pet.controller.FlashMessager.flashMessage;
+
 @Controller
 public class ReqController {
 
     @Autowired
     DAO dao;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @RequestMapping("/")
     public String processRequestToGetMainPage(
@@ -185,55 +184,14 @@ public class ReqController {
     @GetMapping("/profile")
     public String processRequestToGetProfilePage(
             Model model,
-            Principal auth,
-            RedirectAttributes redirectAttributes
+            Principal auth
     ) {
         User user = dao.findUserByName(auth.getName());
-        List<Book> books = dao.getReadBooksForUser(user);
-        model.addAttribute("books", books);
+        model.addAttribute("books", dao.getReadBooksForUser(user));
         model.addAttribute("user", user);
         model.addAttribute("activeId", "profile");
-        redirectAttributes.addFlashAttribute("message", "test2");
+        model.addAttribute("users", dao.getUsers());
         return "profile";
-    }
-
-    @PostMapping("/changePassword")
-    public String postChangePassword(
-            @RequestParam String oldPassword,
-            @RequestParam String newPassword,
-            Model model,
-            Principal auth,
-            RedirectAttributes r
-    ) {
-        User user = dao.findUserByName(auth.getName());
-        if (!passwordEncoder.matches(oldPassword, user.getEncodedPassword())) {
-            flashMessage("Old password does not match the one on record.", r);
-        } else {
-            flashMessage("Password changed succesfully.", r);
-            dao.setPassword(user, newPassword);
-        }
-        return "redirect:/profile";
-    }
-
-    private void flashMessage(String content, RedirectAttributes container) {
-        container.addFlashAttribute("flashMessage", content);
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-
-    @GetMapping("/logout")
-    public String logoutPage (
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/login?logout";
     }
 
     /** Transforms an amount from String to long with some error checking.

@@ -36,7 +36,7 @@
                 <td><span th:text="${item.user.name}">sarah</span></td>
                 <td>
                     <form class="post-form" th:action="@{/deleteExpense}" th:method="DELETE">
-                        <input type="text" name="id" id="id" th:value="${item.id}" hidden="false"/>
+                        <input type="text" name="id" id="id" th:value="${item.id}" hidden="true"/>
                         <input type="submit" value="Delete"/>
                     </form>
                 </td>

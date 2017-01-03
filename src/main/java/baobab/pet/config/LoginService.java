@@ -61,7 +61,7 @@ public class LoginService implements UserDetailsService {
         }
 
         User user = dao.findUserByName(username);
-        if (user == null) {
+        if (user == null || !user.isCurrent()) {
             throw new UsernameNotFoundException("No such user: " + username);
         }
         return new org.springframework.security.core.userdetails.User(
