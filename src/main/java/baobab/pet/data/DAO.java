@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.security.InvalidParameterException;
 import java.util.*;
 
 @Component
@@ -61,6 +60,11 @@ public class DAO {
         User user = new User(userName, encode(clearTextPassword));
         userRepository.save(user);
         return user;
+    }
+
+    public void setUserAsAdmin(User user) {
+        user.setRole("ADMIN");
+        userRepository.save(user);
     }
 
     /** Returns most recently used book or any book. */
@@ -163,18 +167,15 @@ public class DAO {
         for (ReadAccess r : readAccessSet) {
             list.add(r.getBook());
         }
-        Collections.sort(list, ALPHABETICAL_ORDER);
+        Collections.sort(list, BOOK_COMPARATOR);
         return list;
     }
 
-    /** Alphabetic comparator for books.
-     *  Uses id to break ties.
+    /** Compares books by id (effectively time created).
      *  Deterministic behavior is needed for navigation bar. */
-    private static Comparator<Book> ALPHABETICAL_ORDER = new Comparator<Book>() {
+    private static Comparator<Book> BOOK_COMPARATOR = new Comparator<Book>() {
         public int compare(Book book1, Book book2) {
-            String a = book1.getName() + book1.getId();
-            String b = book2.getName() + book2.getId();
-            return a.compareTo(b);
+            return Long.compare(book1.getId(), book2.getId());
         }
     };
 

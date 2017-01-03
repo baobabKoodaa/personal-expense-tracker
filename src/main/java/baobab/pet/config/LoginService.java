@@ -31,6 +31,7 @@ public class LoginService implements UserDetailsService {
         /** Populate database for testing convenience. */
 
         User atte = dao.createUser("atte", "1");
+        dao.setUserAsAdmin(atte);
         Book bookA = dao.createBook("Atte's expenses", atte);
         Book bookC = dao.createBook("Common expenses", atte);
         dao.createExpense(2016, 10, bookA, "food/fast food", 1083, atte);

@@ -10,16 +10,8 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="container">
-    <form class="post-form" th:action="@{/newBook}" method="post">
-        <div class="field">
-            <label for="bookName"> Book name: </label>
-            <input type="text" id="bookName" name="bookName" th:value="${user.name + '''s expenses'}"/>
-        </div>
-        <div class="field">
-            <label for="submit"></label>
-            <input type="submit" value="Create Book" id="submit"/>
-        </div>
-    </form>
+    <p><span th:text="${flashMessage}"></span></p>
+    <div th:include="fragments/form_new_book :: form_new_book"/>
 
 </div>
 </body>
