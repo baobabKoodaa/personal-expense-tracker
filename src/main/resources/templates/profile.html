@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="fragments/styles_and_scripts :: imports"/>
+</head>
+<body>
+
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+
+    <div th:if="${param.passwordChangeSuccess}">
+        <p>Password changed succesfully.</p>
+    </div>
+
+    <form class="post-form" th:action="@{/changePassword}" method="post">
+        <div class="field">
+            <label style="width:120px;" for="oldPassword">Old password: </label>
+            <input type="text" id="oldPassword" name="oldPassword"/>
+        </div>
+        <div class="field">
+            <label style="width:120px;" for="newPassword">New password: </label>
+            <input type="text" id="newPassword" name="newPassword"/>
+        </div>
+        <div class="field">
+            <label style="width:120px;" for="submit"></label>
+            <input type="submit" value="Change password" id="submit"/>
+        </div>
+    </form>
+
+    <div th:if="${user.role == 'ADMIN'}">
+        <hr/>
+    </div>
+
+</div>
+</body>
+</html>

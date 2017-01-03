@@ -1,5 +1,7 @@
 package baobab.pet.data.domain;
 
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -11,12 +13,14 @@ public class Book implements Serializable {
     private long id;
     private long groupId; /* determines which categories are available to which books. */
     private String name;
+    private long timeCreated;
     private User owner;
     private Set<ReadAccess> readAccessSet;
     private Set<WriteAccess> writeAccessSet;
 
     public Book() {
         super();
+        this.timeCreated = DateTime.now().getMillis();
         this.readAccessSet = new HashSet<>();
         this.writeAccessSet = new HashSet<>();
     }
@@ -79,5 +83,13 @@ public class Book implements Serializable {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
     }
 }

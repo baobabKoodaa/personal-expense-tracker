@@ -4,9 +4,11 @@ import baobab.pet.data.domain.*;
 import baobab.pet.data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.security.InvalidParameterException;
 import java.util.*;
 
 @Component
@@ -29,6 +31,9 @@ public class DAO {
 
     @Autowired
     WriteAccessRepository writeAccessRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public User findUserByName(String name) {
         return userRepository.findOneByName(name);
@@ -109,10 +114,6 @@ public class DAO {
         userRepository.save(user);
     }
 
-    private String encode(String plaintextPassword) {
-        return BCrypt.hashpw(plaintextPassword, BCrypt.gensalt());
-    }
-
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
     }
@@ -191,5 +192,17 @@ public class DAO {
     public void setFlagShowAllExpensesTo(User user, boolean bool) {
         user.setRequestingToViewAllExpenses(bool);
         userRepository.save(user);
+    }
+
+    public void setPassword(User user, String oldClearTextPassword, String newClearTextPassword) {
+        if (!passwordEncoder.matches(oldClearTextPassword, user.getEncodedPassword())) {
+            throw new InvalidParameterException("Old password does not match the one on record!");
+        }
+        user.setEncodedPassword(encode(newClearTextPassword));
+        userRepository.save(user);
+    }
+
+    public String encode(String plaintextPassword) {
+        return BCrypt.hashpw(plaintextPassword, BCrypt.gensalt());
     }
 }

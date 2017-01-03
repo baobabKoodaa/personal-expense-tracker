@@ -35,7 +35,8 @@ public class ReqController {
         if (activeBook == null) {
             return "welcome";
         }
-        model.addAttribute("activeBook", activeBook);
+        model.addAttribute("activeId", activeBook.getId());
+        model.addAttribute("activeBookName", activeBook.getName());
         model.addAttribute("expenseCount", dao.getBookSize(activeBook));
         model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
         if (user.isRequestingToViewAllExpenses()) {
@@ -124,6 +125,7 @@ public class ReqController {
         List<Book> books = dao.getReadBooksForUser(user);
         model.addAttribute("books", books);
         model.addAttribute("user", user);
+        model.addAttribute("activeId", "new");
         return "new_book";
     }
 
@@ -138,10 +140,32 @@ public class ReqController {
     public String serveModifyBookTemplate(Model model, Principal auth) {
         User user = dao.findUserByName(auth.getName());List<Book> books = dao.getReadBooksForUser(user);
         Book activeBook = dao.getLatestBookForUser(user);
-        model.addAttribute("activeBook", activeBook);
+        model.addAttribute("activeId", activeBook.getId());
         model.addAttribute("books", books);
         model.addAttribute("user", user);
         return "modify_book";
+    }
+
+    @GetMapping("/profile")
+    public String getPageProfile(Model model, Principal auth) {
+        User user = dao.findUserByName(auth.getName());
+        List<Book> books = dao.getReadBooksForUser(user);
+        model.addAttribute("books", books);
+        model.addAttribute("user", user);
+        model.addAttribute("activeId", "profile");
+        return "profile";
+    }
+
+    @PostMapping("/changePassword")
+    public String postChangePassword(
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword,
+            Model model,
+            Principal auth
+    ) {
+        User user = dao.findUserByName(auth.getName());
+        dao.setPassword(user, oldPassword, newPassword);
+        return "redirect:/profile?passwordChangeSuccess";
     }
 
     @GetMapping("/login")
@@ -187,7 +211,7 @@ public class ReqController {
         }
         char delimiter = amountRaw.charAt(i++);
         if (delimiter != '.' && delimiter != ',') {
-            /* Unusual delimiter. User input very likely contains some mistake. */
+            /* Unusual delimiter. User input likely contains some mistake. */
             throw new InvalidParameterException("Invalid amount.");
         }
         if (i != amountRaw.length() - 2) {
