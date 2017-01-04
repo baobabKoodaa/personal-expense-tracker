@@ -12,6 +12,7 @@ public class Book implements Serializable {
 
     private long id;
     private long groupId; /* determines which categories are available to which books. */
+    private boolean current;
     private String name;
     private long timeCreated;
     private User owner;
@@ -27,6 +28,7 @@ public class Book implements Serializable {
 
     public Book(String name, User owner) {
         this();
+        this.current = true;
         this.name = name;
         this.owner = owner;
     }
@@ -91,5 +93,13 @@ public class Book implements Serializable {
 
     public void setTimeCreated(long timeCreated) {
         this.timeCreated = timeCreated;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
     }
 }

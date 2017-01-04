@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="form_new_permission">
+
+    <h3>New permission</h3>
+    <form class="post-form" th:action="@{/enableWriteAccess}" th:method="POST">
+        <div class="field">
+            <label for="targetName">Username:</label>
+            <input type="text" id="targetName" name="targetName"/>
+        </div>
+        <input type="text" name="bookId" id="bookId" th:value="${activeBook.id}" hidden="true"/>
+        <div class="field">
+            <label for="submit"></label>
+            <input type="submit" value="Give access" id="submit"/>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

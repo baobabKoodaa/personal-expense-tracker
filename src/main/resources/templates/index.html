@@ -9,10 +9,13 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="container">
+
     <p><span th:text="${flashMessage}"></span></p>
+
     <div th:include="fragments/form_new_expense :: form_new_expense"/>
     <hr/>
     <div th:include="fragments/view_table_expenses :: view_table_expenses"/>
+
 </div>
 </body>
 </html>

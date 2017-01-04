@@ -67,14 +67,18 @@ public class DAO {
         userRepository.save(user);
     }
 
-    /** Returns most recently used book or any book. */
+    /** Returns most recently used book or any non-deleted book. */
     @Transactional
     public Book getLatestBookForUser(User user) {
         Book latest = user.getLatestRead();
         if (latest == null) {
             /** Assign any accessible book as latest. */
             for (ReadAccess r : user.getReadAccessSet()) {
-                latest = r.getBook();
+                Book b = r.getBook();
+                if (!b.isCurrent()) {
+                    continue;
+                }
+                latest = b;
                 setBookAsLatestForUser(latest, user);
                 break;
             }
@@ -96,11 +100,29 @@ public class DAO {
         Book book = new Book(bookName, user);
         bookRepository.save(book);
         ensureBookHasValidGroupId(book);
-        readAccessRepository.save(new ReadAccess(book, user));
-        writeAccessRepository.save(new WriteAccess(book, user));
+        enableReadAccess(book, user);
+        enableWriteAccess(book, user);
         setBookAsLatestForUser(book, user);
         return book;
     }
+
+    public void enableReadAccess(Book book, User user) {
+        readAccessRepository.save(new ReadAccess(book, user));
+    }
+
+    public void disableReadAccess(Book book, User user) {
+        readAccessRepository.deleteByBookAndUser(book, user);
+    }
+
+    public void enableWriteAccess(Book book, User user) {
+        writeAccessRepository.save(new WriteAccess(book, user));
+    }
+
+    public void disableWriteAccess(Book book, User user) {
+        writeAccessRepository.deleteByBookAndUser(book, user);
+    }
+
+
 
     /** JPA is unable to auto generate non key columns.
      *  That's why we need to set group id's manually.
@@ -161,11 +183,15 @@ public class DAO {
         return categoryRepository.findByGroupId(groupId);
     }
 
-    public List<Book> getReadBooksForUser(User user) {
+    /** Param current should be set true for active books, false when listing trashed books. */
+    public List<Book> getBooksForUserWithReadAccess(User user, boolean current) {
         Set<ReadAccess> readAccessSet = user.getReadAccessSet();
         List<Book> list = new ArrayList<Book>();
         for (ReadAccess r : readAccessSet) {
-            list.add(r.getBook());
+            Book b = r.getBook();
+            if (b.isCurrent() == current) {
+                list.add(r.getBook());
+            }
         }
         Collections.sort(list, BOOK_COMPARATOR);
         return list;
@@ -211,5 +237,37 @@ public class DAO {
     public void disableUser(User user) {
         user.setCurrent(false);
         userRepository.save(user);
+    }
+
+    public void enableBook(Book book) {
+        book.setCurrent(true);
+        bookRepository.save(book);
+    }
+
+    public void disableBook(Book book) {
+        book.setCurrent(false);
+        for (ReadAccess r : book.getReadAccessSet()) {
+            User u = r.getUser();
+            if (u.getLatestRead() == book) {
+                u.setLatestRead(null);
+            }
+        }
+        bookRepository.save(book);
+    }
+
+    public void setBookOwner(Book book, User owner) {
+        book.setOwner(owner);
+        if (!hasWriteAccess(owner, book)) {
+            enableWriteAccess(book, owner);
+        }
+        if (!hasReadAccess(owner, book)) {
+            enableReadAccess(book, owner);
+        }
+        bookRepository.save(book);
+    }
+
+    public void setBookName(Book book, String bookName) {
+        book.setName(bookName);
+        bookRepository.save(book);
     }
 }

@@ -8,14 +8,15 @@
 
 <div th:fragment="form_modify_book">
 
+    <h3>Name and ownership</h3>
     <form class="post-form" th:action="@{/modifyBook}" method="post">
         <div class="field">
-            <label for="bookName"> Book name: </label>
-            <input type="text" id="bookName" name="bookName" th:value="${user.name + '''s expenses'}"/>
+            <label for="bookName">Book name: </label>
+            <input type="text" id="bookName" name="bookName" th:value="${activeBook.name}"/>
         </div>
         <div class="field">
-            <label for="owner"> Owner: </label>
-            <input type="text" id="owner" name="owner" th:value="${activeBook.owner.name}"/>
+            <label for="newOwnerName">Owner: </label>
+            <input type="text" id="newOwnerName" name="newOwnerName" th:value="${activeBook.owner.name}"/>
         </div>
         <input type="text" id="bookId" name="bookId" hidden="true" th:value="${activeBook.id}"/>
         <div class="field">

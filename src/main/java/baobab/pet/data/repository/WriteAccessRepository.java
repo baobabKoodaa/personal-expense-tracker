@@ -7,4 +7,5 @@ import baobab.pet.data.domain.WriteAccess;
 
 public interface WriteAccessRepository extends JpaRepository<WriteAccess, Long> {
     WriteAccess findOneByBookAndUser(Book book, User user);
+    void deleteByBookAndUser(Book book, User user);
 }

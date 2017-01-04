@@ -50,7 +50,7 @@
         </form>
     </div>
 
-    <div style="display:inline-block; float:right;">
+    <div th:if="${showModifyBookButton}" style="display:inline-block; float:right;">
         <form class="post-form" th:action="@{/modifyBook}" th:method="GET">
             <input type="submit" style="width:170px; padding:4px; margin:1px; align-content:right" id="modifyBook" value="Modify book"/>
         </form>

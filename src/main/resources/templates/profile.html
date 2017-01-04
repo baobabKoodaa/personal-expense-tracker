@@ -14,6 +14,8 @@
     <p><span th:text="${flashMessage}"></span></p>
 
     <div th:include="fragments/form_modify_password :: form_modify_password"/>
+    <hr/>
+    <div th:include="fragments/view_table_trash :: view_table_trash"/>
 
     <div th:if="${user.role == 'ADMIN'}">
         <hr/>

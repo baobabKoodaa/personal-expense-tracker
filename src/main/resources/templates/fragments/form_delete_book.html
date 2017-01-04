@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="form_delete_book">
+
+    <h3>Delete</h3>
+    <p>Deleted books can always be restored from the profile page.</p>
+    <form class="post-form" th:action="@{/deleteBook}" th:method="DELETE">
+        <input type="text" id="bookId" name="bookId" hidden="true" th:value="${activeBook.id}"/>
+        <div class="field">
+            <label for="submit"></label>
+            <input type="submit" value="Delete book" id="submit"/>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

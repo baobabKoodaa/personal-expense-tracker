@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="view_table_trash">
+
+    <h3>Trashed books</h3>
+    <div th:if="${#lists.isEmpty(trash)}">
+        <p>Nothing in the trash.</p>
+    </div>
+    <div th:if="${not #lists.isEmpty(trash)}" style="overflow-x:auto;">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Options</th>
+            </tr>
+            <tr th:each="item : ${trash}">
+                <td><span th:text="${item.name}">12</span></td>
+                <td>
+                    <form class="post-form" th:action="@{/restoreBook}" th:method="POST">
+                        <input type="text" name="bookId" id="bookId" th:value="${item.id}" hidden="true"/>
+                        <input type="submit" value="Restore"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

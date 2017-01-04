@@ -2,10 +2,6 @@ package baobab.pet.controller;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,18 +9,16 @@ import baobab.pet.data.domain.*;
 import baobab.pet.data.DAO;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.security.AccessControlException;
 import java.security.InvalidParameterException;
 import java.security.Principal;
 import java.util.List;
 
-import static baobab.pet.controller.FlashMessager.flashMessage;
+import static baobab.pet.controller.FlashMessenger.flashMessage;
 
 @Controller
-public class ReqController {
+public class BookController {
 
     @Autowired
     DAO dao;
@@ -36,7 +30,7 @@ public class ReqController {
     ) {
         User user = dao.findUserByName(auth.getName());
         model.addAttribute("user", user);
-        List<Book> books = dao.getReadBooksForUser(user);
+        List<Book> books = dao.getBooksForUserWithReadAccess(user, true);
         model.addAttribute("books", books);
         Book activeBook = dao.getLatestBookForUser(user);
         if (activeBook == null) {
@@ -46,6 +40,9 @@ public class ReqController {
         model.addAttribute("activeBookName", activeBook.getName());
         model.addAttribute("expenseCount", dao.getBookSize(activeBook));
         model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
+        if (activeBook.getOwner() == user) {
+            model.addAttribute("showModifyBookButton", true);
+        }
         if (user.isRequestingToViewAllExpenses()) {
             dao.setFlagShowAllExpensesTo(user, false);
             model.addAttribute("allExpensesAreListed", true);
@@ -149,7 +146,7 @@ public class ReqController {
             Principal auth
     ) {
         User user = dao.findUserByName(auth.getName());
-        List<Book> books = dao.getReadBooksForUser(user);
+        List<Book> books = dao.getBooksForUserWithReadAccess(user, true);
         model.addAttribute("books", books);
         model.addAttribute("user", user);
         model.addAttribute("activeId", "new");
@@ -172,7 +169,8 @@ public class ReqController {
             Model model,
             Principal auth
     ) {
-        User user = dao.findUserByName(auth.getName());List<Book> books = dao.getReadBooksForUser(user);
+        User user = dao.findUserByName(auth.getName());
+        List<Book> books = dao.getBooksForUserWithReadAccess(user, true);
         Book activeBook = dao.getLatestBookForUser(user);
         model.addAttribute("activeId", activeBook.getId()); // needed for navbar
         model.addAttribute("activeBook", activeBook);
@@ -181,17 +179,66 @@ public class ReqController {
         return "modify_book";
     }
 
-    @GetMapping("/profile")
-    public String processRequestToGetProfilePage(
-            Model model,
-            Principal auth
+    @Transactional
+    @PostMapping("/modifyBook")
+    public String processRequestToModifyBook(
+            @RequestParam long bookId,
+            @RequestParam String bookName,
+            @RequestParam String newOwnerName,
+            Principal auth,
+            RedirectAttributes r
+    ) {
+        User requestor = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        if (book.getOwner() != requestor) {
+            flashMessage("Only the owner of a book can modify it!", r);
+        }
+        if (!book.getName().equals(bookName)) {
+            dao.setBookName(book, bookName);
+            flashMessage("Name change succesful.", r);
+        }
+
+        User newOwner = dao.findUserByName(newOwnerName);
+        if (newOwner == null) {
+            flashMessage("Unable to find user " + newOwnerName, r);
+        } else if (newOwner != requestor) {
+            dao.setBookOwner(book, newOwner);
+            flashMessage("Succesfully changed owner to " + newOwnerName, r);
+        }
+        return "redirect:/modifyBook";
+    }
+
+    @DeleteMapping("/deleteBook")
+    public String processRequestToDeleteBook(
+            @RequestParam long bookId,
+            Principal auth,
+            RedirectAttributes r
     ) {
         User user = dao.findUserByName(auth.getName());
-        model.addAttribute("books", dao.getReadBooksForUser(user));
-        model.addAttribute("user", user);
-        model.addAttribute("activeId", "profile");
-        model.addAttribute("users", dao.getUsers());
-        return "profile";
+        Book book = dao.findBookById(bookId);
+        if (dao.hasWriteAccess(user, book)) {
+            dao.disableBook(book);
+            flashMessage("Deleted book " + book.getName() + ". You can still restore it from the profile page.", r);
+        } else {
+            flashMessage("You don't have write access to " + book.getName(), r);
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/restoreBook")
+    public String processRequestToRestoreBook(
+            @RequestParam long bookId,
+            Principal auth,
+            RedirectAttributes r) {
+        User user = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        if (dao.hasWriteAccess(user, book)) {
+            dao.enableBook(book);
+            flashMessage("Restored book " + book.getName(), r);
+        } else {
+            flashMessage("You don't have write access to book " + book.getName(), r);
+        }
+        return "redirect:/profile";
     }
 
     /** Transforms an amount from String to long with some error checking.

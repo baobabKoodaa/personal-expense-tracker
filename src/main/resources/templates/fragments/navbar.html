@@ -19,7 +19,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li th:class="${activeId == 'profile'} ? 'active' : 'inactive'" th:if="${user} != null" th:inline="text"><a href="/profile"><span class="glyphicon glyphicon-user"></span>[[${user.name}]]</a></li>
-                <li th:if="${user} != null" th:inline="text"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                <li th:if="${user} != null" th:inline="text"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
                 <li th:if="${user} == null"><a href="/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             </ul>
         </div>

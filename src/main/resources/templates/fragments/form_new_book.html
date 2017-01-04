@@ -10,7 +10,7 @@
 
     <form class="post-form" th:action="@{/newBook}" method="post">
         <div class="field">
-            <label for="bookName"> Book name: </label>
+            <label for="bookName">Book name: </label>
             <input type="text" id="bookName" name="bookName" th:value="${user.name + '''s expenses'}"/>
         </div>
         <div class="field">

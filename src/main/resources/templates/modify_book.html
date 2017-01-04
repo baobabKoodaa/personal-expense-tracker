@@ -10,8 +10,16 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="container">
+
     <p><span th:text="${flashMessage}"></span></p>
+
     <div th:include="fragments/form_modify_book :: form_modify_book"/>
+    <hr/>
+    <div th:include="fragments/view_table_permissions :: view_table_permissions"/>
+    <hr/>
+    <div th:include="fragments/form_new_permission :: form_new_permission"/>
+    <hr/>
+    <div th:include="fragments/form_delete_book :: form_delete_book"/>
 
 </div>
 </body>
