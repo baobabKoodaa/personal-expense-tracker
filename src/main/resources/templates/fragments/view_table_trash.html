@@ -8,9 +8,9 @@
 
 <div th:fragment="view_table_trash">
 
-    <h3>Trashed books</h3>
+    <h3>Deleted books</h3>
     <div th:if="${#lists.isEmpty(trash)}">
-        <p>Nothing in the trash.</p>
+        <p>If you delete books, you will be able to restore them here.</p>
     </div>
     <div th:if="${not #lists.isEmpty(trash)}" style="overflow-x:auto;">
         <table>

@@ -84,7 +84,7 @@ public class BookController {
         }
         try {
             postExpense(amountRaw, year, month, user, previousVersion, book, category);
-        } catch (InvalidParameterException ex) {
+        } catch (Exception ex) {
             flashMessage(ex.getMessage(), r);
             return "redirect:/";
         }
@@ -100,8 +100,7 @@ public class BookController {
         if (previousVersion.isEmpty()) {
             /* When adding a new expense. */
             dao.createExpense(year, month, book, category, amountCents, user);
-        }
-        else {
+        } else {
             /* When modifying an expense. */
             Long prevId = Long.parseLong(previousVersion);
             Expense previous = dao.findExpenseById(prevId);

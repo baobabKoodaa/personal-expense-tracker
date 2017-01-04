@@ -44,7 +44,7 @@
         </table>
     </div>
     <p>
-    <div style="display:inline-block;">
+    <div th:if="${allExpensesAreListed == null}" style="display:inline-block;">
         <form class="post-form" th:action="@{/viewAllExpenses}" th:method="GET">
             <input type="submit" style="width:170px; padding:4px; margin:1px;" id="displayAll" th:value="${'View all ' + expenseCount}"/>
         </form>
