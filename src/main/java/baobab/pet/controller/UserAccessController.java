@@ -90,16 +90,20 @@ public class UserAccessController {
     ) {
         User requestor = dao.findUserByName(auth.getName());
         User target = dao.findUserByName(targetName);
-        if (requestor.getRole().equals("ADMIN")) {
-            if (target != null) {
-                dao.disableUser(target);
-                /** TODO: Boot from active sessions. */
-                flashMessage("Succesfully deleted user " + targetName, r);
-            } else {
-                flashMessage("User " + targetName + " not found", r);
-            }
-        } else {
+        if (!requestor.getRole().equals("ADMIN")) {
             flashMessage("Only admins can delete users!", r);
+            return "redirect:/profile";
+        }
+        if (target == requestor) {
+            flashMessage("Admins can delete other admins but not themselves.", r);
+            return "redirect:/profile";
+        }
+        if (target != null) {
+            dao.disableUser(target);
+            /** TODO: Boot from active sessions. */
+            flashMessage("Succesfully deleted user " + targetName, r);
+        } else {
+            flashMessage("User " + targetName + " not found", r);
         }
         return "redirect:/profile";
     }
@@ -145,16 +149,37 @@ public class UserAccessController {
         Book book = dao.findBookById(bookId);
         if (book.getOwner() != requestor) {
             flashMessage("Only the owner of a book can change access permissions.", r);
-            return "redirect:/modifyBook";
-        }
-        if (target == null) {
+        } else if (target == null) {
             flashMessage("User " + targetName + " not found", r);
+        } else if (target == requestor) {
+            flashMessage("Owner of a book always has access permission.", r);
         } else if (dao.hasWriteAccess(target, book)) {
             dao.disableWriteAccess(book, target);
             dao.disableReadAccess(book, target);
             flashMessage("Access permissions removed from " + targetName, r);
         }
         return "redirect:/modifyBook";
+    }
+
+    @PostMapping("/transferOwnership")
+    public String processRequestToTransferOwnership(
+            @RequestParam String newOwnerName,
+            @RequestParam long bookId,
+            Principal auth,
+            RedirectAttributes r
+    ) {
+        User requestor = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        User newOwner = dao.findUserByName(newOwnerName);
+        if (book.getOwner() != requestor) {
+            flashMessage("Only the owner of a book can modify it!", r);
+        } else if (newOwner == null) {
+            flashMessage("Unable to find user " + newOwnerName, r);
+        } else if (newOwner != requestor) {
+            dao.setBookOwner(book, newOwner);
+            flashMessage("Succesfully changed owner of " + book.getName() + " to " + newOwnerName, r);
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/login")

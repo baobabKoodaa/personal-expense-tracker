@@ -26,7 +26,8 @@ public class BookController {
     @RequestMapping("/")
     public String processRequestToGetMainPage(
             Model model,
-            Principal auth
+            Principal auth,
+            RedirectAttributes r
     ) {
         User user = dao.findUserByName(auth.getName());
         model.addAttribute("user", user);
@@ -190,7 +191,6 @@ public class BookController {
     public String processRequestToModifyBook(
             @RequestParam long bookId,
             @RequestParam String bookName,
-            @RequestParam String newOwnerName,
             Principal auth,
             RedirectAttributes r
     ) {
@@ -198,18 +198,9 @@ public class BookController {
         Book book = dao.findBookById(bookId);
         if (book.getOwner() != requestor) {
             flashMessage("Only the owner of a book can modify it!", r);
-        }
-        if (!book.getName().equals(bookName)) {
+        } else if (!book.getName().equals(bookName)) {
             dao.setBookName(book, bookName);
             flashMessage("Name change succesful.", r);
-        }
-
-        User newOwner = dao.findUserByName(newOwnerName);
-        if (newOwner == null) {
-            flashMessage("Unable to find user " + newOwnerName, r);
-        } else if (newOwner != requestor) {
-            dao.setBookOwner(book, newOwner);
-            flashMessage("Succesfully changed owner to " + newOwnerName, r);
         }
         return "redirect:/modifyBook";
     }

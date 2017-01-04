@@ -13,16 +13,26 @@
         <table>
             <tr>
                 <th>Name</th>
-                <th>Options</th>
+                <th>Remove access</th>
+                <th>Transfer ownership</th>
             </tr>
             <tr th:each="item : ${activeBook.readAccessSet}">
                 <td><span th:text="${item.user.name}">12</span></td>
                 <td>
-                    <form class="post-form" th:action="@{/disableWriteAccess}" th:method="POST">
-                        <input type="text" name="bookId" id="bookId" th:value="${activeBook.id}" hidden="true"/>
-                        <input type="text" name="targetName" id="targetName" th:value="${item.user.name}" hidden="true"/>
-                        <input type="submit" value="Disable"/>
-                    </form>
+                        <form class="post-form" th:action="@{/disableWriteAccess}" th:method="POST">
+                            <input type="text" name="bookId" id="bookId" th:value="${activeBook.id}" hidden="true"/>
+                            <input type="text" name="targetName" id="targetName" th:value="${item.user.name}" hidden="true"/>
+                            <input type="submit" value="Remove"/>
+                        </form>
+                </td>
+                <td>
+                    <div th:if="${item.user != activeBook.owner}">
+                        <form class="post-form" th:action="@{/transferOwnership}" th:method="POST">
+                            <input type="text" name="bookId" id="bookId" th:value="${activeBook.id}" hidden="true"/>
+                            <input type="text" name="newOwnerName" id="newOwnerName" th:value="${item.user.name}" hidden="true"/>
+                            <input type="submit" value="Set owner"/>
+                        </form>
+                    </div>
                 </td>
             </tr>
         </table>
