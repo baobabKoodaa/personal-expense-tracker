@@ -111,6 +111,10 @@ public class DAO {
     }
 
     public void disableReadAccess(Book book, User user) {
+        if (user.getLatestRead() == book) {
+            user.setLatestRead(null);
+        }
+        userRepository.save(user);
         readAccessRepository.deleteByBookAndUser(book, user);
     }
 
@@ -119,6 +123,10 @@ public class DAO {
     }
 
     public void disableWriteAccess(Book book, User user) {
+        if (user.getLatestRead() == book) {
+            user.setLatestRead(null);
+        }
+        userRepository.save(user);
         writeAccessRepository.deleteByBookAndUser(book, user);
     }
 
