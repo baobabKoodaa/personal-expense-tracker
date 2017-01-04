@@ -82,31 +82,37 @@ public class BookController {
             return "redirect:/";
         }
         try {
-            long amountCents = getAmountInCents(amountRaw);
-            validateInputYear(year);
-            validateInputMonth(month);
-            dao.setLatestInputDate(user, year, month);
-            if (previousVersion.isEmpty()) {
-            /* When adding a new expense. */
-                dao.createExpense(year, month, book, category, amountCents, user);
-            }
-            else {
-            /* When modifying an expense. */
-                Long prevId = Long.parseLong(previousVersion);
-                Expense previous = dao.findExpenseById(prevId);
-                if (!previous.isCurrent()) {
-                    throw new InvalidParameterException("Only current expenses can be modified!");
-                }
-                if (!dao.hasWriteAccess(user, previous.getBook())) {
-                    throw new AccessControlException("User does not have write access to this book!");
-                }
-                Expense current = dao.createExpense(year, month, book, category, amountCents, user);
-                dao.updateVersionHistory(current, previous);
-            }
+            postExpense(amountRaw, year, month, user, previousVersion, book, category);
         } catch (InvalidParameterException ex) {
             flashMessage(ex.getMessage(), r);
+            return "redirect:/";
         }
+        flashMessage("Expense recorded succesfully.", r);
         return "redirect:/";
+    }
+
+    void postExpense(String amountRaw, int year, int month, User user, String previousVersion, Book book, String category) {
+        long amountCents = getAmountInCents(amountRaw);
+        validateInputYear(year);
+        validateInputMonth(month);
+        dao.setLatestInputDate(user, year, month);
+        if (previousVersion.isEmpty()) {
+            /* When adding a new expense. */
+            dao.createExpense(year, month, book, category, amountCents, user);
+        }
+        else {
+            /* When modifying an expense. */
+            Long prevId = Long.parseLong(previousVersion);
+            Expense previous = dao.findExpenseById(prevId);
+            if (!previous.isCurrent()) {
+                throw new InvalidParameterException("Only current expenses can be modified!");
+            }
+            if (!dao.hasWriteAccess(user, previous.getBook())) {
+                throw new AccessControlException("User does not have write access to this book!");
+            }
+            Expense current = dao.createExpense(year, month, book, category, amountCents, user);
+            dao.updateVersionHistory(current, previous);
+        }
     }
 
     @DeleteMapping("/deleteExpense")
