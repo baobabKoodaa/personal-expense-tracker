@@ -32,7 +32,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
             .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+            .rememberMe()
+                .key("pet-sdifjoi09213ofijlsdkfnslkdfm")
+                .tokenValiditySeconds(1209600);
     }
 
     @Override
