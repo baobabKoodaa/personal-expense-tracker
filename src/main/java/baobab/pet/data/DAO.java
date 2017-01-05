@@ -157,7 +157,7 @@ public class DAO {
     }
 
     public long getBookSize(Book book) {
-        return expenseRepository.countByBook(book);
+        return expenseRepository.countByBookAndCurrent(book, true);
     }
 
     public List<Expense> findAllCurrentExpenses(Book book) {

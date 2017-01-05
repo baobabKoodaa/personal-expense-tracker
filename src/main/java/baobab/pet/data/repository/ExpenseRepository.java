@@ -18,6 +18,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
      * expenses (deleted or old versions of modified expenses). */
     List<Expense> findByBook(Book book);
 
-    /** Counts number of expenses in the book. */
-    long countByBook(Book book);
+    /** Counts number of current expenses in the book. */
+    long countByBookAndCurrent(Book book, Boolean current);
 }

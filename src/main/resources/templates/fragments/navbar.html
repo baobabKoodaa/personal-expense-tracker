@@ -15,12 +15,12 @@
                 <li th:each="book : ${books}" th:class="${activeId != null and book.id == activeId ? 'active' : 'inactive'}">
                     <a th:href="${'select/' + book.id}"><span th:text="${book.name}">Book</span></a>
                 </li>
-                <li th:if="${user} != null" th:class="${activeId == 'new'} ? 'active' : 'inactive'"><a href="/newBook">New Book</a></li>
+                <li th:if="${user} != null" th:class="${activeId == 'new'} ? 'active' : 'inactive'"><a th:href="@{/newBook}">New Book</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li th:class="${activeId == 'profile'} ? 'active' : 'inactive'" th:if="${user} != null" th:inline="text"><a href="/profile"><span class="glyphicon glyphicon-user"></span>[[${user.name}]]</a></li>
-                <li th:if="${user} != null" th:inline="text"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
-                <li th:if="${user} == null"><a href="/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li th:class="${activeId == 'profile'} ? 'active' : 'inactive'" th:if="${user} != null" th:inline="text"><a th:href="@{/profile}"><span class="glyphicon glyphicon-user"></span>[[${user.name}]]</a></li>
+                <li th:if="${user} != null" th:inline="text"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+                <li th:if="${user} == null"><a th:href="@{/}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             </ul>
         </div>
     </nav>
