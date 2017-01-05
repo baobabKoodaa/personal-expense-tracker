@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "book_id", "user_id" })})
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "book_id", "user_entity_id" })})
 public class ReadAccess implements Serializable {
 
     private long id;
@@ -42,7 +42,7 @@ public class ReadAccess implements Serializable {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_entity_id", nullable = false)
     public User getUser() {
         return user;
     }

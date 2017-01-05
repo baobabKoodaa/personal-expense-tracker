@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "user_entity") /* PostgreSQL doesn't allow a table named user */
 public class User {
 
     private long id;

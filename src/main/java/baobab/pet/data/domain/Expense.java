@@ -104,7 +104,7 @@ public class Expense {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_entity_id", nullable = false)
     public User getUser() {
         return user;
     }

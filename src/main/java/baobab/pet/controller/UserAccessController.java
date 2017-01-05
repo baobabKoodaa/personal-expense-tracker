@@ -75,6 +75,8 @@ public class UserAccessController {
         User requestor = dao.findUserByName(auth.getName());
         if (!requestor.getRole().equals("ADMIN")) {
             flashMessage("Only admins can create new users!", r);
+        } else if (dao.findUserByName(newUserName) != null) {
+            flashMessage("Name " + newUserName + " belongs to an existing or previous user.", r);
         } else {
             dao.createUser(newUserName, newUserPassword);
             flashMessage("New user succesfully created.", r);
