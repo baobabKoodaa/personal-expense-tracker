@@ -8,24 +8,37 @@
 
 <div th:fragment="view_table_categories">
 
-    <h3>Edit categories</h3>
+    <h3>Category dropbox options</h3>
     <div style="overflow-x:auto;">
         <table>
             <tr>
                 <th>Category</th>
                 <th>Category</th>
                 <th>Category</th>
-                <th>Remove</th>
+                <th>Show</th>
+                <th>Hide</th>
             </tr>
             <tr th:each="category : ${categories}">
                 <td th:each="subCategory : ${category.parseSubCategories()}">
                     <span th:text="${subCategory}">subcategory</span>
                 </td>
                 <td>
-                    <form class="post-form" th:action="@{/deleteCategory}" th:method="DELETE">
-                        <input type="text" name="categoryId" id="categoryId" th:value="${category.id}" hidden="true"/>
-                        <input type="submit" value="Remove"/>
-                    </form>
+                    <div th:if="${category.hidden}">
+                        <form class="post-form" th:action="@{/showCategoryInDropbox}" th:method="POST">
+                            <input type="text" name="categoryId" id="categoryId" th:value="${category.id}" hidden="true"/>
+                            <input type="text" name="bookId" id="bookId" th:value="${activeBook.id}" hidden="true"/>
+                            <input type="submit" value="Show"/>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <div th:if="${not category.hidden}">
+                        <form class="post-form" th:action="@{/hideCategoryFromDropbox}" th:method="POST">
+                            <input type="text" name="categoryId" id="categoryId" th:value="${category.id}" hidden="true"/>
+                            <input type="text" name="bookId" id="bookId" th:value="${activeBook.id}" hidden="true"/>
+                            <input type="submit" value="Hide"/>
+                        </form>
+                    </div>
                 </td>
             </tr>
         </table>

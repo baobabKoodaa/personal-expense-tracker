@@ -187,8 +187,12 @@ public class DAO {
         expenseRepository.save(expense);
     }
 
-    public List<Category> findCategoriesByGroupId(long groupId) {
+    public List<Category> findAllCategoriesByGroupId(long groupId) {
         return categoryRepository.findByGroupId(groupId);
+    }
+
+    public List<Category> findVisibleCategoriesByGroupId(long groupId) {
+        return categoryRepository.findByGroupIdAndHidden(groupId, false);
     }
 
     /** Param current should be set true for active books, false when listing trashed books. */
@@ -277,5 +281,19 @@ public class DAO {
     public void setBookName(Book book, String bookName) {
         book.setName(bookName);
         bookRepository.save(book);
+    }
+
+    public Category findCategoryById(long categoryId) {
+        return categoryRepository.findOne(categoryId);
+    }
+
+    public void hideCategory(Category category) {
+        category.setHidden(true);
+        categoryRepository.save(category);
+    }
+
+    public void unhideCategory(Category category) {
+        category.setHidden(false);
+        categoryRepository.save(category);
     }
 }

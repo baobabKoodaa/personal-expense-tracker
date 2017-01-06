@@ -8,6 +8,7 @@ public class Category {
     private long id;
     private long groupId; /* determines which categories are available to which books. */
     private String name;
+    private boolean hidden;
 
     public Category() {
         super();
@@ -65,5 +66,13 @@ public class Category {
         }
         out[j] = sb.toString();
         return out;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

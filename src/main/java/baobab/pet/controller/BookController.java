@@ -40,7 +40,7 @@ public class BookController {
         model.addAttribute("activeId", activeBook.getId());
         model.addAttribute("activeBookName", activeBook.getName());
         model.addAttribute("expenseCount", dao.getBookSize(activeBook));
-        model.addAttribute("categories", dao.findCategoriesByGroupId(activeBook.getGroupId()));
+        model.addAttribute("categories", dao.findVisibleCategoriesByGroupId(activeBook.getGroupId()));
         if (activeBook.getOwner() == user) {
             model.addAttribute("showModifyBookButton", true);
         }
@@ -178,12 +178,12 @@ public class BookController {
         User user = dao.findUserByName(auth.getName());
         List<Book> books = dao.getBooksForUserWithReadAccess(user, true);
         Book activeBook = dao.getLatestBookForUser(user);
-        List<Category> categories = dao.findCategoriesByGroupId(activeBook.getGroupId());
+        List<Category> categories = dao.findAllCategoriesByGroupId(activeBook.getGroupId());
         model.addAttribute("activeId", activeBook.getId()); // needed for navbar
         model.addAttribute("activeBook", activeBook);
         model.addAttribute("books", books);
         model.addAttribute("user", user);
-        model.addAttribute("unusedCategories", categories);
+        model.addAttribute("categories", categories);
         return "modify_book";
     }
 
@@ -202,6 +202,48 @@ public class BookController {
         } else if (!book.getName().equals(bookName)) {
             dao.setBookName(book, bookName);
             flashMessage("Name change succesful.", r);
+        }
+        return "redirect:/modifyBook";
+    }
+
+    @PostMapping("/hideCategoryFromDropbox")
+    public String processRequestToHideCategoryFromDropbox(
+            @RequestParam long bookId,
+            @RequestParam long categoryId,
+            Principal auth,
+            RedirectAttributes r
+    ) {
+        User user = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        Category category = dao.findCategoryById(categoryId);
+        if (book.getGroupId() != category.getGroupId()) {
+            flashMessage("Category does not belong to said book!", r);
+        } else if (!dao.hasWriteAccess(user, book)) {
+            flashMessage("You do not have write access to this book!", r);
+        } else {
+            dao.hideCategory(category);
+            flashMessage("Succesfully hidden category " + category.getName(), r);
+        }
+        return "redirect:/modifyBook";
+    }
+
+    @PostMapping("/showCategoryInDropbox")
+    public String processRequestToShowCategoryInDropbox(
+            @RequestParam long bookId,
+            @RequestParam long categoryId,
+            Principal auth,
+            RedirectAttributes r
+    ) {
+        User user = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        Category category = dao.findCategoryById(categoryId);
+        if (book.getGroupId() != category.getGroupId()) {
+            flashMessage("Category does not belong to said book!", r);
+        } else if (!dao.hasWriteAccess(user, book)) {
+            flashMessage("You do not have write access to this book!", r);
+        } else {
+            dao.unhideCategory(category);
+            flashMessage("Succesfully brought back category " + category.getName(), r);
         }
         return "redirect:/modifyBook";
     }
