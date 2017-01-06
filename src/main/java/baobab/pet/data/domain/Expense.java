@@ -13,6 +13,7 @@ public class Expense {
     private int month;
     private Book book;
     private Category category;
+    private String details;
     private long amountCents;
     private User user;
     private Long previousVersionId;
@@ -23,13 +24,14 @@ public class Expense {
         super();
     }
 
-    public Expense(int year, int month, Book book, Category category, long amountCents, User user) {
+    public Expense(int year, int month, Book book, Category category, String details, long amountCents, User user) {
         this();
         this.current = true;
         this.year = year;
         this.month = month;
         this.book = book;
         this.category = category;
+        this.details = details;
         this.amountCents = amountCents;
         this.user = user;
         this.timeAdded = DateTime.now().getMillis();
@@ -133,5 +135,13 @@ public class Expense {
 
     public String parseTimeAdded() {
         return new DateTime((this.getTimeAdded())).toString("dd/MM/yyyy");
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

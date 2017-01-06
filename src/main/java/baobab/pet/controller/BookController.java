@@ -73,6 +73,7 @@ public class BookController {
             @RequestParam String category,
             @RequestParam String amountRaw,
             @RequestParam String previousVersion,
+            @RequestParam String details,
             Principal auth,
             RedirectAttributes r
     ) {
@@ -83,7 +84,7 @@ public class BookController {
             return "redirect:/";
         }
         try {
-            postExpense(amountRaw, year, month, user, previousVersion, book, category);
+            postExpense(amountRaw, year, month, user, previousVersion, book, category, details);
         } catch (Exception ex) {
             flashMessage(ex.getMessage(), r);
             return "redirect:/";
@@ -92,14 +93,14 @@ public class BookController {
         return "redirect:/";
     }
 
-    void postExpense(String amountRaw, int year, int month, User user, String previousVersion, Book book, String category) {
+    void postExpense(String amountRaw, int year, int month, User user, String previousVersion, Book book, String category, String details) {
         long amountCents = getAmountInCents(amountRaw);
         validateInputYear(year);
         validateInputMonth(month);
         dao.setLatestInputDate(user, year, month);
         if (previousVersion.isEmpty()) {
             /* When adding a new expense. */
-            dao.createExpense(year, month, book, category, amountCents, user);
+            dao.createExpense(year, month, book, category, details, amountCents, user);
         } else {
             /* When modifying an expense. */
             Long prevId = Long.parseLong(previousVersion);
@@ -110,7 +111,7 @@ public class BookController {
             if (!dao.hasWriteAccess(user, previous.getBook())) {
                 throw new AccessControlException("User does not have write access to this book!");
             }
-            Expense current = dao.createExpense(year, month, book, category, amountCents, user);
+            Expense current = dao.createExpense(year, month, book, category, details, amountCents, user);
             dao.updateVersionHistory(current, previous);
         }
     }

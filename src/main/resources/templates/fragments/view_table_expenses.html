@@ -21,7 +21,7 @@
                 <th>Amount</th>
                 <th>Category</th>
                 <th>Category</th>
-                <th>Category</th>
+                <th>Details</th>
                 <th>Added on</th>
                 <th>Added by</th>
                 <th>Options</th>
@@ -32,6 +32,7 @@
                 <td th:each="subCategory : ${item.category.parseSubCategories()}">
                     <span th:text="${subCategory}">subcategory</span>
                 </td>
+                <td><span th:text="${item.details}">info</span></td>
                 <td><span th:text="${item.parseTimeAdded()}">01/02/2017</span></td>
                 <td><span th:text="${item.user.name}">sarah</span></td>
                 <td>

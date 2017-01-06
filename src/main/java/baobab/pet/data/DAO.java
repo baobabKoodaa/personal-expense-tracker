@@ -164,9 +164,9 @@ public class DAO {
         return expenseRepository.findByBookAndCurrentOrderByYearDescMonthDesc(book, true);
     }
 
-    public Expense createExpense(int year, int month, Book book, String categoryName, long amountCents, User user) {
+    public Expense createExpense(int year, int month, Book book, String categoryName, String details, long amountCents, User user) {
         Category category = detCategory(categoryName, book);
-        Expense expense = new Expense(year, month, book, category, amountCents, user);
+        Expense expense = new Expense(year, month, book, category, details, amountCents, user);
         expenseRepository.save(expense);
         return expense;
     }

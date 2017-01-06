@@ -46,17 +46,17 @@ public class Category {
         this.groupId = groupId;
     }
 
+    /** TODO: refactor. */
     public String[] parseSubCategories() {
         String raw = this.getName();
-        String[] out = new String[3];
+        String[] out = new String[2];
         out[0] = "";
         out[1] = "";
-        out[2] = "";
         StringBuilder sb = new StringBuilder();
         int j = 0;
         for (int i=0; i<raw.length(); i++) {
             char c = raw.charAt(i);
-            if (c == '/' && j < 2) {
+            if (c == '/' && j < 1) {
                 out[j] = sb.toString();
                 sb = new StringBuilder();
                 j++;
