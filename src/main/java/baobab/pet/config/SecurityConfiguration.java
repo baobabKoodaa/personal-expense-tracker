@@ -4,8 +4,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,18 +25,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        /* Remember-me token needs a private key with high entropy in order to stop
-        *  token-based brute force attacks on weak user passwords. In production
-        *  we read the key from environment variable PETREMEMBERMEKEY. */
+        String rememberMeKey = "this-key-only-in-development";
+        if (profileIsProduction()) {
+            /* Remember-me token needs a private key with high entropy in order to stop
+            *  token-based brute force attacks on weak user passwords. In production
+            *  we read the key from environment variable PETREMEMBERMEKEY. */
+            rememberMeKey = System.getenv("PETREMEMBERMEKEY");
+            if (rememberMeKey == null || rememberMeKey.length() < 12) {
+                throw new RuntimeException("Invalid remember-me key! In production a key of at least " +
+                        "length 12 is expected from environment variable PETREMEMBERMEKEY");
+            }
 
-        String rememberMeKey =
-                (profileIsProduction() ?
-                 System.getenv("PETREMEMBERMEKEY") :
-                 "this-key-only-in-development");
-
-        if (rememberMeKey == null || rememberMeKey.length() < 12) {
-            throw new RuntimeException("Invalid remember-me key! In production a key of at least " +
-                    "length 12 is expected from environment variable PETREMEMBERMEKEY");
+            /* Force HTTPS in production. */
+            http.requiresChannel().anyRequest().requiresSecure();
         }
 
         http

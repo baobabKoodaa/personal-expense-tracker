@@ -178,10 +178,12 @@ public class BookController {
         User user = dao.findUserByName(auth.getName());
         List<Book> books = dao.getBooksForUserWithReadAccess(user, true);
         Book activeBook = dao.getLatestBookForUser(user);
+        List<Category> categories = dao.findCategoriesByGroupId(activeBook.getGroupId());
         model.addAttribute("activeId", activeBook.getId()); // needed for navbar
         model.addAttribute("activeBook", activeBook);
         model.addAttribute("books", books);
         model.addAttribute("user", user);
+        model.addAttribute("unusedCategories", categories);
         return "modify_book";
     }
 

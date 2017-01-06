@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="view_table_categories">
+
+    <h3>Edit categories</h3>
+    <div style="overflow-x:auto;">
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Category</th>
+                <th>Category</th>
+                <th>Remove</th>
+            </tr>
+            <tr th:each="category : ${categories}">
+                <td th:each="subCategory : ${category.parseSubCategories()}">
+                    <span th:text="${subCategory}">subcategory</span>
+                </td>
+                <td>
+                    <form class="post-form" th:action="@{/deleteCategory}" th:method="DELETE">
+                        <input type="text" name="categoryId" id="categoryId" th:value="${category.id}" hidden="true"/>
+                        <input type="submit" value="Remove"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

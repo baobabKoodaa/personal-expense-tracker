@@ -10,7 +10,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-/** This class exists to perform actions after server has started. */
+/** This class exists to perform actions after the server has started. */
 @Component
 public class StartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
