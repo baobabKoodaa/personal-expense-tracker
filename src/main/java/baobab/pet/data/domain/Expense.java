@@ -144,4 +144,19 @@ public class Expense {
     public void setDetails(String details) {
         this.details = details;
     }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "id=" + id +
+                ", year=" + year +
+                ", month=" + month +
+                ", bookName=" + book.getName() +
+                ", categoryName=" + category.getName() +
+                ", details='" + details + '\'' +
+                ", amountCents=" + amountCents +
+                ", username=" + user.getName() +
+                ", timeAdded=" + timeAdded +
+                '}';
+    }
 }

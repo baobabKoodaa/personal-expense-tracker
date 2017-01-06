@@ -3,10 +3,12 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <div th:include="styles_and_scripts :: imports"/>
+
 </head>
 <body>
 
 <div th:fragment="form_new_expense">
+
     <h3>Add new expense</h3>
 
     <form class="post-form" action="#" th:action="@{/postExpense}" method="POST">
@@ -22,6 +24,8 @@
             <label for="amountRaw">Amount</label>
             <input type="text" name="amountRaw" id="amountRaw"/>
         </div>
+
+        <!-- Category :: Datalist doesn't work with Safari, fallback to select. -->
         <div class="field">
             <label for="category">Category</label>
             <input type='text' name="category" id="category" list='listid'>
@@ -29,7 +33,20 @@
                 <option th:each="category : *{categories}" th:value="${category.name}"></option>
             </datalist>
             </input>
+            <select name="categorySafari" id="categorySafari">
+                <option th:each="category : *{categories}"><span th:text="${category.name}"></span></option>
+            </select>
+            <script type="text/javascript">
+                var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0 || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
+                if (isSafari)
+                    document.getElementById("category").style.display="none";
+                else
+                    document.getElementById("categorySafari").style.display="none";
+
+            </script>
         </div>
+
+
         <div class="field">
             <label for="details">Details</label>
             <input type="text" name="details" id="details"/>
@@ -41,7 +58,10 @@
             <input type="submit" id="submit" value="Add expense" />
         </div>
     </form>
+
+
 </div>
+
 
 </body>
 </html>

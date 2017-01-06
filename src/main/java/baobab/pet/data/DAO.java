@@ -34,6 +34,9 @@ public class DAO {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    TrainingWheels logger;
+
     public User findUserByName(String name) {
         return userRepository.findOneByName(name);
     }
@@ -168,6 +171,7 @@ public class DAO {
         Category category = detCategory(categoryName, book);
         Expense expense = new Expense(year, month, book, category, details, amountCents, user);
         expenseRepository.save(expense);
+        logger.log("CREATE|" + expense.toString());
         return expense;
     }
 
@@ -185,6 +189,7 @@ public class DAO {
     public void deleteExpense(Expense expense) {
         expense.setCurrent(false);
         expenseRepository.save(expense);
+        logger.log("DELETE|" + expense.toString());
     }
 
     public List<Category> findAllCategoriesByGroupId(long groupId) {
@@ -198,7 +203,7 @@ public class DAO {
     /** Param current should be set true for active books, false when listing trashed books. */
     public List<Book> getBooksForUserWithReadAccess(User user, boolean current) {
         Set<ReadAccess> readAccessSet = user.getReadAccessSet();
-        List<Book> list = new ArrayList<Book>();
+        List<Book> list = new ArrayList<>();
         for (ReadAccess r : readAccessSet) {
             Book b = r.getBook();
             if (b.isCurrent() == current) {

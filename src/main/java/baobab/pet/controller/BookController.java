@@ -71,6 +71,7 @@ public class BookController {
             @RequestParam int month,
             @RequestParam long bookId,
             @RequestParam String category,
+            @RequestParam String categorySafari,
             @RequestParam String amountRaw,
             @RequestParam String previousVersion,
             @RequestParam String details,
@@ -82,6 +83,9 @@ public class BookController {
         if (!dao.hasWriteAccess(user, book)) {
             flashMessage("You do not have access to book " + book.getName(), r);
             return "redirect:/";
+        }
+        if (!categorySafari.isEmpty()) {
+            category = categorySafari;
         }
         try {
             postExpense(amountRaw, year, month, user, previousVersion, book, category, details);
@@ -203,6 +207,24 @@ public class BookController {
         } else if (!book.getName().equals(bookName)) {
             dao.setBookName(book, bookName);
             flashMessage("Name change succesful.", r);
+        }
+        return "redirect:/modifyBook";
+    }
+
+    @PostMapping("/addCategory")
+    public String processRequestToAddCategory(
+            @RequestParam long bookId,
+            @RequestParam String categoryName,
+            Principal auth,
+            RedirectAttributes r
+    ) {
+        User user = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        if (!dao.hasWriteAccess(user, book)) {
+            flashMessage("You don't have write access to this book!", r);
+        } else {
+            Category category = dao.detCategory(categoryName, book);
+            flashMessage("Succesfully added category " + categoryName, r);
         }
         return "redirect:/modifyBook";
     }

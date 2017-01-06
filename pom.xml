@@ -73,6 +73,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.2-1002.jdbc4</version>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.flywaydb</groupId>-->
+			<!--<artifactId>flyway-core</artifactId>-->
+			<!--<version>4.0.3</version>-->
+		<!--</dependency>-->
 	</dependencies>
 
 	<dependencyManagement>
