@@ -28,7 +28,7 @@
             </tr>
             <tr th:each="item : ${expenses}">
                 <td><span th:text="${item.month}">12</span>/<span th:text="${item.year}">2016</span></td>
-                <td><span th:text="${item.amountCents / 100}">6</span>.<span th:text="(${item.amountCents % 100 == 0} ? '00' : ${item.amountCents % 100})">6</span>€</td>
+                <td><span th:text="${item.amountFormatted()}">6</span>€</td>
                 <td th:each="subCategory : ${item.category.parseSubCategories()}">
                     <span th:text="${subCategory}">subcategory</span>
                 </td>

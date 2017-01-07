@@ -145,6 +145,16 @@ public class Expense {
         this.details = details;
     }
 
+    public String amountFormatted() {
+        if (amountCents < 100) {
+            return "0."+amountCents;
+        }
+        String a = ""+amountCents;
+        String euros = a.substring(0, a.length()-2);
+        String cents = a.substring(a.length()-2);
+        return euros + "." + cents;
+    }
+
     @Override
     public String toString() {
         return "Expense{" +
