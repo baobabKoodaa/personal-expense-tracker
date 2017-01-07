@@ -71,7 +71,6 @@ public class BookController {
             @RequestParam int month,
             @RequestParam long bookId,
             @RequestParam String category,
-            @RequestParam String categorySafari,
             @RequestParam String amountRaw,
             @RequestParam String previousVersion,
             @RequestParam String details,
@@ -83,9 +82,6 @@ public class BookController {
         if (!dao.hasWriteAccess(user, book)) {
             flashMessage("You do not have access to book " + book.getName(), r);
             return "redirect:/";
-        }
-        if (!categorySafari.isEmpty()) {
-            category = categorySafari;
         }
         try {
             postExpense(amountRaw, year, month, user, previousVersion, book, category, details);
