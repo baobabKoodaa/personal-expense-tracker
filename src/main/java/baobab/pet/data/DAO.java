@@ -197,7 +197,7 @@ public class DAO {
     }
 
     public List<Category> findVisibleCategoriesByGroupId(long groupId) {
-        return categoryRepository.findByGroupIdAndHidden(groupId, false);
+        return categoryRepository.findByGroupIdAndHiddenOrderByNameAsc(groupId, false);
     }
 
     /** Param current should be set true for active books, false when listing trashed books. */
