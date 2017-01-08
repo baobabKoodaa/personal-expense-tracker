@@ -45,21 +45,23 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
         dao.setUserAsAdmin(atte);
         Book bookA = dao.createBook("Atte's expenses", atte);
         Book bookC = dao.createBook("Chess Club's expenses", atte);
-        dao.createExpense(2016, 10, bookC, "Food", "Week 1 meet-up", 6083, atte);
-        dao.createExpense(2016, 11, bookC, "Food", "Week 2 meet-up", 5045, atte);
-        dao.createExpense(2016, 12, bookC, "Advertisements/Facebook", "", 10000, atte);
-        dao.createExpense(2016, 12, bookC, "Mandatory/Rent", "", 60000, atte);
-        dao.createExpense(2016, 12, bookC, "Mandatory/Equipment", "", 3000, atte);
+        dao.createExpense(2018, 1, bookC, "Food", "Week 1 meet-up", 6083, atte);
+        dao.createExpense(2018, 1, bookC, "Food", "Week 2 meet-up", 5045, atte);
+        dao.createExpense(2018, 1, bookC, "Advertisements/Facebook", "", 10000, atte);
+        dao.createExpense(2018, 1, bookC, "Mandatory/Rent", "", 60000, atte);
+        dao.createExpense(2018, 1, bookC, "Mandatory/Equipment", "", 3000, atte);
 
         User mikko = dao.createUser("mikko", "masa");
         Book bookM = dao.createBook("Mikko's expenses", mikko);
-        dao.createExpense(2016, 10, bookC, "Food", "Week 3 meet-up", 7020, mikko);
-        dao.createExpense(2016, 11, bookM, "food", "",67, mikko);
-        dao.createExpense(2016, 12, bookM, "food", "", 55, mikko);
-        dao.createExpense(2016, 12, bookM, "food", "", 99, mikko);
-        dao.createExpense(2016, 12, bookM, "entertainment", "", 10, mikko);
-        dao.createExpense(2016, 12, bookM, "entertainment", "", 30, mikko);
-        dao.createExpense(2016, 12, bookM, "entertainment", "", 30, mikko);
+        dao.createExpense(2018, 1, bookC, "Food", "Week 3 meet-up", 7020, mikko);
+        dao.createExpense(2018, 1, bookC, "Food", "Week 4 meet-up", 5500, mikko);
+        dao.createExpense(2018, 2, bookC, "Food", "Week 1 meet-up", 8493, mikko);
+        dao.createExpense(2018, 1, bookM, "food", "",67, mikko);
+        dao.createExpense(2018, 1, bookM, "food", "", 55, mikko);
+        dao.createExpense(2018, 1, bookM, "food", "", 99, mikko);
+        dao.createExpense(2018, 1, bookM, "entertainment", "", 10, mikko);
+        dao.createExpense(2018, 1, bookM, "entertainment", "", 30, mikko);
+        dao.createExpense(2018, 1, bookM, "entertainment", "", 30, mikko);
 
         User marianne = dao.createUser("marianne", "1");
     }
