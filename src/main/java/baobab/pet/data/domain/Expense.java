@@ -146,6 +146,9 @@ public class Expense {
     }
 
     public String amountFormatted() {
+        if (amountCents < 10) {
+            return "0.0" + amountCents;
+        }
         if (amountCents < 100) {
             return "0."+amountCents;
         }
