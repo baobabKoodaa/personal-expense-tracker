@@ -44,16 +44,16 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
         User atte = dao.createUser("atte", "1");
         dao.setUserAsAdmin(atte);
         Book bookA = dao.createBook("Atte's expenses", atte);
-        Book bookC = dao.createBook("Common expenses", atte);
-        dao.createExpense(2016, 10, bookA, "food/fast food", "mcdonalds", 1083, atte);
-        dao.createExpense(2016, 11, bookA, "food/high end", "", 2045, atte);
-        dao.createExpense(2016, 12, bookA, "food/fast food", "", 830, atte);
-        dao.createExpense(2016, 12, bookA, "food/fast food", "", 666, atte);
-        dao.createExpense(2016, 12, bookA, "entertainment", "", 3000, atte);
+        Book bookC = dao.createBook("Chess Club's expenses", atte);
+        dao.createExpense(2016, 10, bookC, "Food", "Week 1 meet-up", 6083, atte);
+        dao.createExpense(2016, 11, bookC, "Food", "Week 2 meet-up", 5045, atte);
+        dao.createExpense(2016, 12, bookC, "Advertisements/Facebook", "", 10000, atte);
+        dao.createExpense(2016, 12, bookC, "Mandatory/Rent", "", 60000, atte);
+        dao.createExpense(2016, 12, bookC, "Mandatory/Equipment", "", 3000, atte);
 
         User mikko = dao.createUser("mikko", "masa");
         Book bookM = dao.createBook("Mikko's expenses", mikko);
-        dao.createExpense(2016, 10, bookM, "food", "", 23, mikko);
+        dao.createExpense(2016, 10, bookC, "Food", "Week 3 meet-up", 7020, mikko);
         dao.createExpense(2016, 11, bookM, "food", "",67, mikko);
         dao.createExpense(2016, 12, bookM, "food", "", 55, mikko);
         dao.createExpense(2016, 12, bookM, "food", "", 99, mikko);
@@ -61,7 +61,7 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
         dao.createExpense(2016, 12, bookM, "entertainment", "", 30, mikko);
         dao.createExpense(2016, 12, bookM, "entertainment", "", 30, mikko);
 
-        User nomad = dao.createUser("marianne", "1");
+        User marianne = dao.createUser("marianne", "1");
     }
 
     private String getProfile() {
