@@ -11,7 +11,7 @@
 
     <h3>Add new expense</h3>
 
-    <form class="post-form" action="#" th:action="@{/postExpense}" method="POST">
+    <form name="xxx" class="post-form" action="#" th:action="@{/postExpense}" method="POST">
         <div class="field">
             <label for="year">Year</label>
             <input type="number" name="year" id="year" th:value="${user.latestInputYear}"/>
@@ -41,7 +41,7 @@
                 if (isSafari) {
                     document.getElementById("category").style.display = "none";
                     document.getElementById("categorySafari").style.display = "inline-block";
-                    $('input').on('change',function(){
+                    $("form").submit(function (e) {
                         var element = document.getElementById("categorySafari");
                         var selection = element.options[element.selectedIndex].text;
                         document.getElementById("category").value = selection;

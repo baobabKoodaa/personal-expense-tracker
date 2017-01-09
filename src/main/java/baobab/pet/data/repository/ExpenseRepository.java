@@ -12,7 +12,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<Expense> findFirst10ByBookAndCurrentOrderByTimeAddedDesc(Book book, Boolean current);
 
     /** Returns all current expenses from given Book, ordered by receipt date. */
-    List<Expense> findByBookAndCurrentOrderByYearDescMonthDesc(Book book, Boolean current);
+    List<Expense> findByBookAndCurrentOrderByYearDescMonthDescTimeAddedDesc(Book book, Boolean current);
 
     /** Returns all expenses from given book, including non current
      * expenses (deleted or old versions of modified expenses). */

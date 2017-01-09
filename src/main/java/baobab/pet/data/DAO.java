@@ -164,7 +164,7 @@ public class DAO {
     }
 
     public List<Expense> findAllCurrentExpenses(Book book) {
-        return expenseRepository.findByBookAndCurrentOrderByYearDescMonthDesc(book, true);
+        return expenseRepository.findByBookAndCurrentOrderByYearDescMonthDescTimeAddedDesc(book, true);
     }
 
     public Expense createExpense(int year, int month, Book book, String categoryName, String details, long amountCents, User user) {
