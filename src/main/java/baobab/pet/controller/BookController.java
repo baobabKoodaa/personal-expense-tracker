@@ -332,13 +332,18 @@ public class BookController {
             /* Unusual delimiter. User input likely contains some mistake. */
             throw new InvalidParameterException("Invalid amount.");
         }
-        if (i != amountRaw.length() - 2) {
-            /* Unexpected amount of decimals in user input. */
+        int numberOfDecimals = amountRaw.length() - i;
+        if (numberOfDecimals != 2 && numberOfDecimals != 1) {
+            /* Expected either 1 or 2 decimals after seeing delimiter. */
             throw new InvalidParameterException("Invalid amount.");
         }
         for (; i<amountRaw.length(); i++) {
             char c = amountRaw.charAt(i);
             sb.append(c);
+        }
+        if (numberOfDecimals == 1) {
+            /* User input was like 5.1, so we pad the missing 0. */
+            sb.append('0');
         }
         try {
             return Long.parseLong(sb.toString());
