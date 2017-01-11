@@ -15,10 +15,10 @@
             </span>
     </h3>
     <div style="overflow-x:auto;">
-        <table>
+        <table align="right">
             <tr>
                 <th>Date</th>
-                <th>Amount</th>
+                <th class="amount">Amount</th>
                 <th>Category</th>
                 <th>Subcategories</th>
                 <th>Details</th>
@@ -28,7 +28,7 @@
             </tr>
             <tr th:each="item : ${expenses}">
                 <td><span th:text="${item.month}">12</span>/<span th:text="${item.year}">2016</span></td>
-                <td><span th:text="${item.amountFormatted()}">6</span>€</td>
+                <td class="amount"><span th:text="${item.amountFormatted()}">6</span>€</td>
                 <td th:each="subCategory : ${item.category.parseSubCategories()}">
                     <span th:text="${subCategory}">subcategory</span>
                 </td>
