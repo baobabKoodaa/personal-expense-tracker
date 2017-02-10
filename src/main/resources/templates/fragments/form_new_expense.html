@@ -14,11 +14,11 @@
     <form name="xxx" class="post-form" action="#" th:action="@{/postExpense}" method="POST">
         <div class="field">
             <label for="year">Year</label>
-            <input type="number" name="year" id="year" th:value="${user.latestInputYear}"/>
+            <input type="number" name="year" id="year" th:value="${yearNow}"/>
         </div>
         <div class="field">
             <label for="month">Month</label>
-            <input type="number" name="month" id="month" th:value="${user.latestInputMonth}"/>
+            <input type="number" name="month" id="month" th:value="${monthNow}"/>
         </div>
         <div class="field">
             <label for="amountRaw">Amount</label>

@@ -37,6 +37,8 @@ public class BookController {
         if (activeBook == null) {
             return "welcome";
         }
+        model.addAttribute("yearNow", DateTime.now().getYear());
+        model.addAttribute("monthNow", DateTime.now().getMonthOfYear());
         model.addAttribute("activeId", activeBook.getId());
         model.addAttribute("activeBookName", activeBook.getName());
         model.addAttribute("expenseCount", dao.getBookSize(activeBook));
