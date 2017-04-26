@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:include="styles_and_scripts :: imports"/>
+</head>
+<body>
+
+<div th:fragment="view_table_reports">
+
+    <h3>Monthly summaries</h3>
+
+    <div style="overflow-x:auto; width:150px">
+        <table>
+            <tr>
+                <th>Month</th>
+                <th class="amount">Total</th>
+            </tr>
+            <tr th:each="item : ${months}">
+                <td><span th:text="${item.month}">12</span>/<span th:text="${item.year}">2016</span></td>
+                <td class="amount"><span th:text="${item.amountFormatted()}">6000</span>€</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

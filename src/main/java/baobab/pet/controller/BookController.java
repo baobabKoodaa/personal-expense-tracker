@@ -53,6 +53,7 @@ public class BookController {
         } else {
             model.addAttribute("expenses", dao.findSomeRecentExpenses(activeBook));
         }
+        model.addAttribute("months", dao.getMonthlySummaries(activeBook));
         return "index";
     }
 

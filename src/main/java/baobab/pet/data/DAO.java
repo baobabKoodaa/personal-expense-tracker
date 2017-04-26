@@ -156,7 +156,7 @@ public class DAO {
     }
 
     public List<Expense> findSomeRecentExpenses(Book book) {
-        return expenseRepository.findFirst10ByBookAndCurrentOrderByTimeAddedDesc(book, true);
+        return expenseRepository.findFirst5ByBookAndCurrentOrderByTimeAddedDesc(book, true);
     }
 
     public long getBookSize(Book book) {
@@ -165,6 +165,28 @@ public class DAO {
 
     public List<Expense> findAllCurrentExpenses(Book book) {
         return expenseRepository.findByBookAndCurrentOrderByYearDescMonthDescTimeAddedDesc(book, true);
+    }
+
+    public List<Expense> getMonthlySummaries(Book book) {
+        List<Expense> expenses = expenseRepository.findByBookAndCurrentOrderByYearDescMonthDescTimeAddedDesc(book, true);
+        List<Expense> summaries = new ArrayList<>();
+        LinkedHashMap<Long, Long> sums = new LinkedHashMap<>();
+        for (Expense exp : expenses) {
+            long monthId = exp.getYear() * 100 + exp.getMonth();
+            long sum = exp.getAmountCents();
+            Long earlierSum = sums.get(monthId);
+            if (earlierSum != null) {
+                sum += earlierSum;
+            }
+            sums.put(monthId, sum);
+        }
+        for (Long monthId : sums.keySet()) {
+            int year = (int) (monthId / 100);
+            int month = (int) (monthId % 100);
+            long sum = sums.get(monthId);
+            summaries.add(new Expense(year, month, null, null, null, sum, null));
+        }
+        return summaries;
     }
 
     public Expense createExpense(int year, int month, Book book, String categoryName, String details, long amountCents, User user) {

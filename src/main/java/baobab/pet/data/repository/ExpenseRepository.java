@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-    /** Returns latest 10 current expenses from given Book, ordered by time added. */
-    List<Expense> findFirst10ByBookAndCurrentOrderByTimeAddedDesc(Book book, Boolean current);
+    /** Returns latest 5 current expenses from given Book, ordered by time added. */
+    List<Expense> findFirst5ByBookAndCurrentOrderByTimeAddedDesc(Book book, Boolean current);
 
     /** Returns all current expenses from given Book, ordered by receipt date. */
     List<Expense> findByBookAndCurrentOrderByYearDescMonthDescTimeAddedDesc(Book book, Boolean current);
