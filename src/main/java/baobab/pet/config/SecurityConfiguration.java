@@ -36,8 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "length 12 is expected from environment variable PETREMEMBERMEKEY");
             }
 
-            /* Force HTTPS in production. */
-            http.requiresChannel().anyRequest().requiresSecure();
+            /* Uncomment to force HTTPS in production. */
+            // http.requiresChannel().anyRequest().requiresSecure();
         }
 
         http
