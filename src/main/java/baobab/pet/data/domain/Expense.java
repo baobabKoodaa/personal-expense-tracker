@@ -146,16 +146,18 @@ public class Expense {
     }
 
     public String amountFormatted() {
-        if (amountCents < 10) {
-            return "0.0" + amountCents;
+        long absCents = Math.abs(amountCents);
+        if (absCents < 10) {
+            return "0.0" + absCents;
         }
-        if (amountCents < 100) {
-            return "0."+amountCents;
+        if (absCents < 100) {
+            return "0."+absCents;
         }
-        String a = ""+amountCents;
+        String a = ""+absCents;
         String euros = a.substring(0, a.length()-2);
         String cents = a.substring(a.length()-2);
-        return euros + "." + cents;
+        String possibleMinusSign = (amountCents < 0 ? "-" : "");
+        return possibleMinusSign + euros + "." + cents;
     }
 
     @Override
