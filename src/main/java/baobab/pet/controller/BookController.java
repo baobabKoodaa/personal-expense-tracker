@@ -66,6 +66,28 @@ public class BookController {
         return "redirect:/";
     }
 
+    @RequestMapping(path="/export/{bookId}", produces="text/csv")
+    @ResponseBody
+    public String processRequestToExportCSV(
+            @PathVariable long bookId,
+            Model model,
+            Principal auth,
+            RedirectAttributes r
+    ) {
+        User user = dao.findUserByName(auth.getName());
+        Book book = dao.findBookById(bookId);
+        if (!dao.hasReadAccess(user, book)) {
+            return "You do not have read access to book " + bookId;
+        }
+        List<Expense> expenses = dao.findAllCurrentExpenses(book);
+        StringBuilder csv = new StringBuilder();
+        csv.append(Expense.CSVHeader());
+        for (Expense expense : expenses) {
+            csv.append(expense.toCSV());
+        }
+        return csv.toString();
+    }
+
     /** Adding or modifying an expense. */
     @Transactional
     @PostMapping("/postExpense")
@@ -83,7 +105,7 @@ public class BookController {
         User user = dao.findUserByName(auth.getName());
         Book book = dao.findBookById(bookId);
         if (!dao.hasWriteAccess(user, book)) {
-            flashMessage("You do not have access to book " + book.getName(), r);
+            flashMessage("You do not have write access to book " + book.getName(), r);
             return "redirect:/";
         }
         try {

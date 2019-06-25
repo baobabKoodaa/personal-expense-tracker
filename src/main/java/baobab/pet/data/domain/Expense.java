@@ -160,6 +160,22 @@ public class Expense {
         return possibleMinusSign + euros + "." + cents;
     }
 
+    public static String CSVHeader() {
+        return "book;year;month;amount;added_timestamp;added_by;details;categories\r\n";
+    }
+
+    public String toCSV() {
+        return        book.getName() +
+                ";" + year +
+                ";" + month +
+                ";" + amountFormatted() +
+                ";" + timeAdded +
+                ";" + user.getName() +
+                ";" + details +
+                ";" + category.getName() +
+                "\r\n";
+    }
+
     @Override
     public String toString() {
         return "Expense{" +
