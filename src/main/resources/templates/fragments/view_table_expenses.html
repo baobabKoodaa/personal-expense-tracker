@@ -51,7 +51,7 @@
         </form>
     </div>
     <div style="display:inline-block;">
-        <a th:href="${'export/' + activeId}" target="_blank">Download CSV</a>
+        <a th:href="${'export/' + activeId + '.csv'}" target="_blank">Download CSV</a>
     </div>
 
     <div th:if="${showModifyBookButton}" style="display:inline-block; float:right;">
